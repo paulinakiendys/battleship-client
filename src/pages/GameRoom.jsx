@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useGameContext } from '../contexts/GameContextProvider'
 
 const GameRoom = () => {
     const { room_id } = useParams()
-    const { socket } = useGameContext()
+    const { gameUsername, socket } = useGameContext()
     const [users, setUsers] = useState([])
+    const navigate = useNavigate()
 
     const handleUpdateUsers = userlist => {
         console.log("Got new userlist", userlist)
@@ -18,16 +19,21 @@ const GameRoom = () => {
      * @todo fix bug: join request emitted twice
      */
     useEffect(() => {
+        // if no username, redirect user to the login page
+		if (!gameUsername) {
+			navigate('/')
+		}
+
         // emit join request
-        socket.emit('user:joined', room_id, status => {
-            console.log(`Successfully joined ${room_id}`, status)
+        socket.emit('user:joined', gameUsername, room_id, status => {
+            console.log(`Successfully joined ${room_id} as ${gameUsername}`, status)
             
         })
 
         // listen for updated userlist
         socket.on('user:list', handleUpdateUsers)
 
-    }, [socket, room_id])
+    }, [socket, room_id, gameUsername, navigate])
 
     return (
         <>
