@@ -1,2 +1,8 @@
-@import '~bootstrap/scss/bootstrap';
+@import url('https://fonts.googleapis.com/css2?family=Bungee&family=Quicksand:wght@400;600&display=swap');
 
+@import '~bootstrap/scss/bootstrap';
+@import './Table.scss';
+
+* {
+    font-family: 'Quicksand';
+}
