@@ -45,7 +45,7 @@ const Login = () => {
 							value={room_id}
 						/>
 					</Form.Group>
-					<Button variant="primary" type="submit" disabled={!username ||!room_id}>Play</Button>
+					<Button variant="primary" type="submit" disabled={!username || !room_id}>Play</Button>
 				</Form>
 			</div>
 		</>

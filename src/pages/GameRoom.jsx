@@ -20,14 +20,15 @@ const GameRoom = () => {
      */
     useEffect(() => {
         // if no username, redirect user to the login page
-		if (!gameUsername) {
-			navigate('/')
-		}
+        if (!gameUsername) {
+            navigate('/')
+            return
+        }
 
         // emit join request
         socket.emit('user:joined', gameUsername, room_id, status => {
             console.log(`Successfully joined ${room_id} as ${gameUsername}`, status)
-            
+
         })
 
         // listen for updated userlist
