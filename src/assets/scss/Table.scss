@@ -2,18 +2,17 @@ table {
     border-spacing: 2;
     padding: 20px;
     text-align: center;
-    margin: 5%;
   }
   
   table caption {
-    font-size: 2em;
+    font-size: 1.5em;
     color: #171717;
     caption-side: top;
   }
   
   td {
-    width: 3rem;
-    height: 3rem;
+    width: 2rem;
+    height: 2rem;
     color: rgba(0,0,0,0.5);
     margin: 5px;
     border: 0.5px solid white;
@@ -38,4 +37,11 @@ table {
   
   .strike {
     background-color: #550f0f !important;
+  }
+
+  @media screen and(min-width: 768px) {
+    td {
+      width: 3rem;
+      height: 3rem;
+    }
   }
