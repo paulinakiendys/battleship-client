@@ -14,9 +14,6 @@ const GameRoom = () => {
         setUsers(userlist)
     }
 
-    /**
-     * @todo fix bug: join request emitted twice
-     */
     // connect to room when component is mounted
     useEffect(() => {
         // if no username, redirect user to the login page
@@ -24,12 +21,6 @@ const GameRoom = () => {
             navigate('/')
             return
         }
-
-        // emit join request
-        socket.emit('user:joined', gameUsername, room_id, status => {
-            console.log(`Successfully joined ${room_id} as ${gameUsername}`, status)
-            setConnected(true)
-        })
 
         // listen for updated userlist
         socket.on('user:list', handleUpdateUsers)
