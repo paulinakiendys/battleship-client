@@ -2,6 +2,10 @@ import GameBoard from '../components/GameBoard'
 import { useState } from 'react'
 import { Button, Modal } from 'react-bootstrap'
 
+//  Testing code / Work in progress
+//  Import = generateRandomizeLocation()
+import {generateRandomizeLocation} from '../assets/js/randomize_flotilla'
+
 
 export default function GameView() {
 
@@ -36,6 +40,7 @@ export default function GameView() {
                 <GameBoard 
                     owner="user"
                     title="Your field"
+                    shipLocation={generateRandomizeLocation}
                 />
             </div>
             
