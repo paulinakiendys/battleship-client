@@ -1,3 +1,7 @@
+//  Testing code if it works :) Temporary placement 
+//  Import = generateRandomizeLocation
+import {generateRandomizeLocation} from '../assets/js/randomize_flotilla'
+
 export default function GameBoard(props) {
     const board = {
         "rows": [9, 8, 7, 6, 5, 4, 3, 2, 1, 0],

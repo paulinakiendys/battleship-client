@@ -39,6 +39,12 @@ const generateRandomLocation = (ship) => {
     ship.row = randomRow
     ship.col= randomCol
 
+    /**
+     * TODO 
+     * ship.row and ship.col should be unique for each ship
+     * Otherwise run generateRandomLocation until all is unique
+     */
+
 }
 
 shipArray.forEach(ship => generateRandomLocation(ship))
