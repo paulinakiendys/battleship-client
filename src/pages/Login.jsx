@@ -1,26 +1,14 @@
 import { useState } from 'react'
 import { Form, Button } from 'react-bootstrap'
 import { useGameContext } from '../contexts/GameContextProvider'
+import { useNavigate } from "react-router-dom"
 
 const Login = () => {
 	const [username, setUsername] = useState('')
 	const [message, setMessage] = useState('')
 	const [disabled, setDisabled] = useState(false)
 	const { socket } = useGameContext()
-
-	// the first user listening to if an opponent has been found
-	socket.on('user:ready', (room_id) => {
-
-		console.log(room_id)
-
-		setMessage('No need to wait anymore! Redirecting to game room...')
-		/**
-		 * @todo navigate to game room
-		 */
-
-		// tell server that both users are ready
-		socket.emit('users:ready')
-	})
+	const navigate = useNavigate()
 
 	const handleSubmit = e => {
 		e.preventDefault()
@@ -31,28 +19,33 @@ const Login = () => {
 		// Disable input field
 		setDisabled(true)
 
-		socket.emit('user:join', username, (status) => {
+		// emit request to join a room
+		socket.emit('user:join', username, (status, room_id) => {
 
-			console.log(status)
+			// check if we are waiting for an opponent
+			if (status.waiting) {
 
-			// if it is the first user and we need to wait for an opponent, show message
-			if (status.waitingStatus) {
-
+				// show message
 				setMessage('Waiting for an opponent...')
 
 				/**
 				 * @todo Hanna: hide form and show gif
 				 */
-			} else if (!status.waitingStatus) {
-				// if it is the second user and we don't need to wait for an opponent, redirect to game room
 
-				setMessage('An opponent is ready. Redirecting to game room...')
+				// listening for if an opponent has been found
+				socket.on('user:ready', (room_id) => {
 
-				/**
-				 * @todo navigate to game room
-				 */
+					// redirect to game room
+					navigate(`/game/${room_id}`)
 
-				console.log(status.room_id)
+					// tell server that both users are ready
+					socket.emit('users:ready')
+				})
+			} else if (!status.waiting) {
+				// if we are not waiting for an opponent
+
+				// redirect to game room
+				navigate(`/game/${status.room_id}`)
 			}
 		})
 
