@@ -6,6 +6,7 @@ const GameRoom = () => {
     const { room_id } = useParams()
     const { gameUsername, socket } = useGameContext()
     const [users, setUsers] = useState([])
+    const [connected, setConnected] = useState(false)
     const navigate = useNavigate()
 
     const handleUpdateUsers = userlist => {
@@ -13,11 +14,10 @@ const GameRoom = () => {
         setUsers(userlist)
     }
 
-    // connect to room when component is mounted
-
     /**
      * @todo fix bug: join request emitted twice
      */
+    // connect to room when component is mounted
     useEffect(() => {
         // if no username, redirect user to the login page
         if (!gameUsername) {
@@ -28,13 +28,20 @@ const GameRoom = () => {
         // emit join request
         socket.emit('user:joined', gameUsername, room_id, status => {
             console.log(`Successfully joined ${room_id} as ${gameUsername}`, status)
-
+            setConnected(true)
         })
 
         // listen for updated userlist
         socket.on('user:list', handleUpdateUsers)
 
     }, [socket, room_id, gameUsername, navigate])
+
+    // display connecting message
+    if (!connected) {
+        return (
+            <p>Stand by, connecting....</p>
+        )
+    }
 
     return (
         <>
