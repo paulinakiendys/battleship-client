@@ -19,6 +19,8 @@ const Login = () => {
 		navigate(`/rooms/${room_id}`)
 	}
 
+	// demo comment
+
 	return (
 		<>
 			<h1>Welcome to Battleship!</h1>
