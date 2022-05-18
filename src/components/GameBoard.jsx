@@ -1,3 +1,43 @@
+
+//  Testing code if it works :) Temporary placement 
+import generateRandomLocation from '../assets/js/randomize_flotilla'
+
+// List of Ships
+const shipsArray = [
+  {   
+      shipName: "Carrier",
+      length: 4,
+      row: "",
+      col: ""
+  },
+  {
+      shipName: "Battleship",
+      length: 3,
+      row: "",
+      col: ""
+  },
+  {
+      shipName: "Cruiser",
+      length: 2,
+      row: "",
+      col: ""
+  },
+  {
+      shipName: "Submarine",
+      length: 2,
+      row: "",
+      col: ""
+  }
+]
+
+shipsArray.forEach(ship => {generateRandomLocation(ship)})
+
+shipsArray.forEach( (ship) => {
+    console.log("Ship Name:", ship.shipName, "row", ship.row, "col", ship.col);
+})
+
+
+
 export default function GameBoard(props) {
     const board = {
         "rows": [9, 8, 7, 6, 5, 4, 3, 2, 1, 0],
