@@ -8,7 +8,7 @@ const generateRandomLocation = (ship) => {
     let randomize = Math.floor(Math.random() * 10);
     let randomRow = board.rows[randomize]
     let randomCol = board.cols[randomize]
- 
+
     ship.row = randomRow
     ship.col = randomCol
 
