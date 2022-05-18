@@ -27,10 +27,9 @@ const generateRandomLocation = (ship) => {
    * 4: Down
    * Work in progress
 */
-const generateRandomDirection = () => {
+/* const generateRandomDirection = () => {
     let randomDirection = Math.floor(Math.random() * 4) +1
 }
-
-
+ */
 
 export default generateRandomLocation
