@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react'
+import { createContext, useContext } from 'react'
 import socketio from "socket.io-client";
 
 const GameContext = createContext()
@@ -9,11 +9,8 @@ export const useGameContext = () => {
 }
 
 const GameContextProvider = ({ children }) => {
-	const [gameUsername, setGameUsername] = useState()
 
 	const values = {
-		gameUsername,
-		setGameUsername,
 		socket,
 	}
 

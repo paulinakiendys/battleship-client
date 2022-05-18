@@ -1,42 +1,20 @@
-import { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { useGameContext } from '../contexts/GameContextProvider'
 import GameBoard from '../components/GameBoard'
 import ActivityLog from '../components/ActivityLog'
+import { useEffect, useState } from 'react'
 
 const GameRoom = () => {
     const { room_id } = useParams()
-    const { gameUsername, socket } = useGameContext()
-    const [users, setUsers] = useState([])
-    const navigate = useNavigate()
+    const [opponentDisconnected, setOpponentDisconnected] = useState(false)
+    const { socket } = useGameContext()
 
-    const handleUpdateUsers = userlist => {
-        console.log("Got new userlist", userlist)
-        setUsers(userlist)
-    }
-
-    // connect to room when component is mounted
-
-    /**
-     * @todo fix bug: join request emitted twice
-     */
     useEffect(() => {
-        // if no username, redirect user to the login page
-        if (!gameUsername) {
-            navigate('/')
-            return
-        }
-
-        // emit join request
-        socket.emit('user:joined', gameUsername, room_id, status => {
-            console.log(`Successfully joined ${room_id} as ${gameUsername}`, status)
-
+        // listen for when a user disconnects
+        socket.on('user:disconnected', () => {
+            setOpponentDisconnected(true)
         })
-
-        // listen for updated userlist
-        socket.on('user:list', handleUpdateUsers)
-
-    }, [socket, room_id, gameUsername, navigate])
+    }, [socket])
 
     console.log("Users:", users)
     console.log("Game username:", gameUsername)
@@ -69,6 +47,8 @@ const GameRoom = () => {
                 </div>
             </div>
 
+            <h1>Game room: {room_id}</h1>
+            {opponentDisconnected && (<p>Your opponent left the battle 😥</p>)}
         </>
     )
 }
