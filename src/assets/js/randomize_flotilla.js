@@ -20,7 +20,6 @@ const generateRandomLocation = (ship) => {
 
 }
 
-
  /**
    * 1 Left
    * 2 Right
@@ -31,6 +30,7 @@ const generateRandomLocation = (ship) => {
 const generateRandomDirection = () => {
     let randomDirection = Math.floor(Math.random() * 4) +1
 }
+
 
 
 export default generateRandomLocation
