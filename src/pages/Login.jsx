@@ -35,6 +35,7 @@ const Login = () => {
 				// listening for if an opponent has been found
 				socket.on('user:ready', (room_id) => {
 
+<<<<<<< HEAD
 					// redirect to game room
 					navigate(`/game/${room_id}`)
 
@@ -51,6 +52,8 @@ const Login = () => {
 
 	}
 
+=======
+>>>>>>> origin/dev
 	return (
 		<>
 			<h1>Welcome to Battleship!</h1>
