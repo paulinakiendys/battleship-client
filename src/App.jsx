@@ -14,7 +14,7 @@ const App = () => {
 			<Container className="py-3">
 				<Routes>
 					<Route path="/" element={<Login />} />
-					<Route path="/rooms/:room_id" element={<GameRoom />} />
+					<Route path="/game/:room_id" element={<GameRoom />} />
 					<Route path="*" element={<NotFound />} />
 				</Routes>
 			</Container>

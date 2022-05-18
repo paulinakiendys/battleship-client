@@ -62,7 +62,7 @@ const GameRoom = () => {
                     <div id="opponent-gameboard">
                         <GameBoard 
                             owner="opponent"
-                            title="Opponent's field" 
+                            title="Opponent" 
                         />
                         <p className="text-center">Ships left: <span id="opponents-ships"></span></p>
                     </div>

@@ -6,14 +6,8 @@ export default function GameBoard(props) {
 
     const testCode = (e) => {
         console.log("Testing: ", e.target.id)
-        console.log(e.target)
-        e.target.innerHTML = ""
         e.target.classList.add("strike");
       }
-
-      //Aktivitetslogg
-
-      console.log("Testing:", board.cols[1] + board.rows[1])
     
     return (
 
