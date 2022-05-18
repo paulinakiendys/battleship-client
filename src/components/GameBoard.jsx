@@ -6,8 +6,8 @@ let userShip = []
 export default function GameBoard(props) {
 
     const board = {
-        "rows": [9, 8, 7, 6, 5, 4, 3, 2, 1, 0],
-        "cols": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]
+        "cols": [9, 8, 7, 6, 5, 4, 3, 2, 1, 0],
+        "rows": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]
     }
     // List of Ships
     const shipsArray = [
@@ -43,8 +43,6 @@ export default function GameBoard(props) {
 
     const testCode = (e) => {
         console.log("Testing: ", e.target.id)
-        console.log(e.target)
-        e.target.innerHTML = ""
         e.target.classList.add("strike");
       }
     
@@ -73,7 +71,9 @@ export default function GameBoard(props) {
     }
     // Man ska inte kunna clicka på sin spelplan, endast motståndaren
     return (
-      <table>
+
+      <>
+        <table className="d-flex align-items-center flex-column">
         <caption className="table-title">{props.title}</caption>
             <tbody>
             {board.rows.map(row => (
@@ -85,5 +85,9 @@ export default function GameBoard(props) {
             ))}
           </tbody>
       </table>
+      
+      </>
+
+     
     )
 }
