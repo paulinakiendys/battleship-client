@@ -6,3 +6,21 @@
 * {
     font-family: 'Quicksand';
 }
+
+#game-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#board,
+#chat {
+    border: 1px solid grey;
+    height: 300px;
+    width: 300px;
+}
+
+#buttons-wrapper {
+    display: flex;
+    justify-content: space-evenly;
+}
