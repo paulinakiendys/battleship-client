@@ -20,7 +20,7 @@ const Login = () => {
 		setDisabled(true)
 
 		// emit request to join a room
-		socket.emit('user:join', username, (status, room_id) => {
+		socket.emit('user:join', username, (status) => {
 
 			// check if we are waiting for an opponent
 			if (status.waiting) {

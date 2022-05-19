@@ -1,18 +1,57 @@
 import { useParams } from 'react-router-dom'
 import { useGameContext } from '../contexts/GameContextProvider'
 import { useEffect, useState } from 'react'
-import { Button, Form, InputGroup } from 'react-bootstrap'
+import { Button, Form, InputGroup, ListGroup } from 'react-bootstrap'
 
 const GameRoom = () => {
+    const [message, setMessage] = useState('')
+    const [messages, setMessages] = useState([])
     const { room_id } = useParams()
     const [opponentDisconnected, setOpponentDisconnected] = useState(false)
     const { socket } = useGameContext()
 
+    const handleIncomingMessage = message => {
+        console.log("Received a new message", message)
+
+        // add message to chat
+        setMessages(prevMessages => [...prevMessages, message])
+    }
+
+    const handleSubmit = e => {
+        e.preventDefault()
+
+        // send message to server
+        // 1. construct message object
+        const messageObject = {
+            room: room_id,
+            timestamp: Date.now(),
+            content: message,
+        }
+
+        // 2. emit chat message to server
+        socket.emit('chat:message', messageObject)
+
+        // clear message input field
+        setMessage('')
+    }
+
     useEffect(() => {
+
         // listen for when a user disconnects
         socket.on('user:disconnected', () => {
             setOpponentDisconnected(true)
         })
+
+        // listen for incoming messages
+        socket.on('chat:incoming', handleIncomingMessage)
+
+        return () => {
+            console.log("Running cleanup")
+
+            // stop listening to events
+            socket.off('chat:incoming', handleIncomingMessage)
+        }
+
     }, [socket])
 
     return (
@@ -30,20 +69,35 @@ const GameRoom = () => {
                 <div id="chat-wrapper">
                     <div id="chat">
                         {/* Here is log/chat */}
-                        <ul id="messages">
-                            <li>Blabla</li>
-                            <li>Blabla</li>
-                            <li>Blabla</li>
-                        </ul>
+                        <ListGroup id="messages">
+                            {messages.map((message, index) => {
+                                const ts = new Date(message.timestamp)
+                                const time = ts.toLocaleTimeString()
+                                return (
+                                    <ListGroup.Item key={index} className="message">
+                                        <span className="time">{time}</span>
+                                        {/* <span className="user">{message.username}:</span> */}
+                                        <span className="content">{message.content}</span>
+                                    </ListGroup.Item>
+                                )
+                            }
+                            )}
+                        </ListGroup>
                     </div>
-                    <Form>
+                    <Form onSubmit={handleSubmit}>
                         <InputGroup>
-                            <Form.Control type='text' />
-                            <Button type='submit'>Send</Button>
+                            <Form.Control
+                                type='text'
+                                placeholder='Send message'
+                                value={message}
+                                onChange={e => setMessage(e.target.value)}
+                                required
+                            />
+                            <Button type='submit' disabled={!message.length}>Send</Button>
                         </InputGroup>
                     </Form>
                     <div id="buttons-wrapper">
-                        <Button variant='warning'>Change</Button>
+                        <Button variant='warning'>Randomize</Button>
                         <Button variant='success'>Ready</Button>
                     </div>
                 </div>
