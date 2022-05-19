@@ -7,7 +7,6 @@ const GameRoom = () => {
     const [message, setMessage] = useState('')
     const [messages, setMessages] = useState([])
     const { room_id } = useParams()
-    const [opponentDisconnected, setOpponentDisconnected] = useState(false)
     const { socket } = useGameContext()
 
     const handleIncomingMessage = message => {
@@ -38,9 +37,7 @@ const GameRoom = () => {
     useEffect(() => {
 
         // listen for when a user disconnects
-        socket.on('user:disconnected', () => {
-            setOpponentDisconnected(true)
-        })
+        socket.on('user:disconnected', handleIncomingMessage)
 
         // listen for incoming messages
         socket.on('chat:incoming', handleIncomingMessage)
@@ -50,6 +47,7 @@ const GameRoom = () => {
 
             // stop listening to events
             socket.off('chat:incoming', handleIncomingMessage)
+            socket.off('user:disconnected', handleIncomingMessage)
         }
 
     }, [socket])
@@ -57,7 +55,6 @@ const GameRoom = () => {
     return (
         <>
             <h1>{room_id}</h1>
-            {opponentDisconnected && (<p>Your opponent left the battle 😥</p>)}
             <div id="game-wrapper">
                 <div id="board-wrapper">
                     <h2>Your Battleships</h2>
@@ -75,7 +72,7 @@ const GameRoom = () => {
                                 const time = ts.toLocaleTimeString()
                                 return (
                                     <ListGroup.Item key={index} className="message">
-                                        <span className="time">{time}</span>
+                                        <span className="time">{time} </span>
                                         {/* <span className="user">{message.username}:</span> */}
                                         <span className="content">{message.content}</span>
                                     </ListGroup.Item>
