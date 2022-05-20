@@ -7,11 +7,14 @@ const Login = () => {
 	const [username, setUsername] = useState('')
 	const [message, setMessage] = useState('')
 	const [disabled, setDisabled] = useState(false)
-	const { socket } = useGameContext()
+	const { setGameUsername, socket } = useGameContext()
 	const navigate = useNavigate()
 
 	const handleSubmit = e => {
 		e.preventDefault()
+
+		// set game username
+		setGameUsername(username)
 
 		// Empty input field
 		setUsername('')

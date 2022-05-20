@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useGameContext } from '../contexts/GameContextProvider'
 import { useEffect, useState } from 'react'
 import { Button, Form, InputGroup, ListGroup } from 'react-bootstrap'
@@ -7,7 +7,8 @@ const GameRoom = () => {
     const [message, setMessage] = useState('')
     const [messages, setMessages] = useState([])
     const { room_id } = useParams()
-    const { socket } = useGameContext()
+    const { gameUsername, socket } = useGameContext()
+    const navigate = useNavigate()
 
     const handleIncomingMessage = message => {
         console.log("Received a new message", message)
@@ -34,7 +35,13 @@ const GameRoom = () => {
         setMessage('')
     }
 
+    // connect to room when component is mounted
     useEffect(() => {
+        // if no username, redirect them to the login page
+        if (!gameUsername) {
+            navigate('/')
+            return
+        }
 
         // listen for when a user disconnects
         socket.on('user:disconnected', handleIncomingMessage)
@@ -50,7 +57,7 @@ const GameRoom = () => {
             socket.off('user:disconnected', handleIncomingMessage)
         }
 
-    }, [socket])
+    }, [socket, gameUsername, navigate])
 
     return (
         <>
