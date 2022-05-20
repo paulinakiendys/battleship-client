@@ -11,7 +11,8 @@ export const generateRandomLocation = (ship) => {
 
     ship.row = randomRow
     ship.col = randomCol
-   
+    
+    // Make so that randomRow and randomCol are unique 
   
 }
 
@@ -30,8 +31,8 @@ export const generateRandomLocation = (ship) => {
 export const getAllCells = () => {
     let table = document.getElementById('userTable')
     
-    for (var r = 0, n = table.rows.length; r < n; r++) {
-    for (var c = 0, m = table.rows[r].cells.length; c < m; c++) {
+    for (let r = 0, n = table.rows.length; r < n; r++) {
+    for (let c = 0, m = table.rows[r].cells.length; c < m; c++) {
         console.log("Found", table.rows[r].cells[c])
     }
 }

@@ -1,15 +1,16 @@
 
 import {generateRandomLocation, getAllCells} from '../assets/js/randomize_flotilla'
 
-
 let userShips = []
+let position = []
 
 // List of Ships
  const shipsArray = [
   {   
       length: 4,
       row: "",
-      col: ""
+      col: "",
+      position: []
   },
   {
       length: 3,
@@ -35,6 +36,11 @@ userShips = shipsArray.concat(userShips)
 userShips.forEach(ship => {generateRandomLocation(ship)})
 console.log("userShips", userShips)
 
+shipsArray.forEach(ship => {
+  ship.position = position
+  console.log("ship position", ship.position)
+  ship.position.push([ship.col + ship.row, ship.col + (ship.row + 1)])
+})
 
 export default function GameBoard(props) {
 
