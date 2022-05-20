@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react'
 const GameRoom = () => {
     const { room_id } = useParams()
     const [opponentDisconnected, setOpponentDisconnected] = useState(false)
-    const { socket } = useGameContext()
+    const { socket, gameUsername } = useGameContext()
 
     useEffect(() => {
         // listen for when a user disconnects
@@ -16,8 +16,8 @@ const GameRoom = () => {
         })
     }, [socket])
 
-    console.log("Users:", users)
-    console.log("Game username:", gameUsername)
+    // console.log("Users:", users)
+    // console.log("Game username:", gameUsername)
 
     return (
         <>

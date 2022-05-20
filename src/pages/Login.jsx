@@ -7,11 +7,13 @@ const Login = () => {
 	const [username, setUsername] = useState('')
 	const [message, setMessage] = useState('')
 	const [disabled, setDisabled] = useState(false)
-	const { socket } = useGameContext()
+	const { setGameUsername, socket } = useGameContext()
 	const navigate = useNavigate()
 
 	const handleSubmit = e => {
 		e.preventDefault()
+
+		setGameUsername(username)
 
 		// Empty input field
 		setUsername('')
@@ -31,6 +33,7 @@ const Login = () => {
 				/**
 				 * @todo Hanna: hide form and show gif
 				 */
+				
 
 				// listening for if an opponent has been found
 				socket.on('user:ready', (room_id) => {
