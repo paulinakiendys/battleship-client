@@ -5,7 +5,7 @@ import ActivityLog from '../components/ActivityLog'
 import { useEffect, useState } from 'react'
 
 const GameRoom = () => {
-    const { room_id } = useParams()
+    const { room_id, gameUsername } = useParams()
     const [opponentDisconnected, setOpponentDisconnected] = useState(false)
     const { socket } = useGameContext()
 
@@ -15,9 +15,6 @@ const GameRoom = () => {
             setOpponentDisconnected(true)
         })
     }, [socket])
-
-    console.log("Users:", users)
-    console.log("Game username:", gameUsername)
 
     return (
         <>
