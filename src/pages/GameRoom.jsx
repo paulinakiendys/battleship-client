@@ -8,9 +8,18 @@ import { Button, Form, InputGroup, ListGroup } from 'react-bootstrap'
 const GameRoom = () => {
     const [message, setMessage] = useState('')
     const [messages, setMessages] = useState([])
+    const [opponent, setOpponent] = useState('')
     const { room_id } = useParams()
     const { gameUsername, socket } = useGameContext()
     const navigate = useNavigate()
+
+    const handleIncomingUsernames = (userOne, userTwo) => {
+        if (gameUsername === userOne) {
+            setOpponent(userTwo)
+        } else {
+            setOpponent(userOne)
+        }
+    }
 
     const handleIncomingMessage = message => {
         console.log("Received a new message", message)
@@ -45,6 +54,9 @@ const GameRoom = () => {
             return
         }
 
+        // listen for usernames
+        socket.on('users:usernames', handleIncomingUsernames)
+
         // listen for when a user disconnects
         socket.on('user:disconnected', handleIncomingMessage)
 
@@ -55,8 +67,9 @@ const GameRoom = () => {
             console.log("Running cleanup")
 
             // stop listening to events
-            socket.off('chat:incoming', handleIncomingMessage)
+            socket.off('users:usernames', handleIncomingUsernames)
             socket.off('user:disconnected', handleIncomingMessage)
+            socket.off('chat:incoming', handleIncomingMessage)
         }
 
     }, [socket, gameUsername, navigate])
@@ -119,7 +132,7 @@ const GameRoom = () => {
                     <div id="opponent-gameboard">
                         <GameBoard
                             owner="opponent"
-                            title="Opponent"
+                            title={opponent}
                         />
                         <p className="text-center">Ships left: <span id="opponents-ships"></span></p>
                     </div>

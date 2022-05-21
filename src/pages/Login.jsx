@@ -11,7 +11,7 @@ const Login = () => {
 	const navigate = useNavigate()
 	const [waitingScreen, setWaitingScreen] = useState(false)
 
-	const handleSubmit = e => {
+	const handleSubmit = async function (e) {
 		e.preventDefault()
 
 		// set game username
@@ -38,7 +38,7 @@ const Login = () => {
 					navigate(`/game/${room_id}`)
 
 					// tell server that both users are ready
-					socket.emit('users:ready')
+					socket.emit('users:ready', room_id)
 				})
 			} else if (!status.waiting) {
 				// if we are not waiting for an opponent
