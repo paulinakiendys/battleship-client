@@ -6,12 +6,10 @@ import WaitingBoat from "../assets/images/boat-wave.gif"
 
 const Login = () => {
 	const [username, setUsername] = useState('')
-	const [message, setMessage] = useState('')
 	const [disabled, setDisabled] = useState(false)
 	const { setGameUsername, socket } = useGameContext()
 	const navigate = useNavigate()
 	const [waitingScreen, setWaitingScreen] = useState(false)
-	
 
 	const handleSubmit = e => {
 		e.preventDefault()
@@ -31,12 +29,6 @@ const Login = () => {
 			// check if we are waiting for an opponent
 			if (status.waiting) {
 
-				// show message
-				setMessage('Waiting for an opponent...')
-
-				/**
-				 * @todo Hanna: hide form and show gif
-				 */
 				setWaitingScreen(true)
 
 				// listening for if an opponent has been found
@@ -55,46 +47,42 @@ const Login = () => {
 				navigate(`/game/${status.room_id}`)
 			}
 		})
-
 	}
 
 	return (
 		<>
-		{!waitingScreen && (
-			<>
-			<h1>Welcome to Battleship!</h1>
-			<Form onSubmit={handleSubmit}>
-				<Form.Group className="mb-3" controlId="username">
-					<Form.Label>Username</Form.Label>
-					<Form.Control
-						onChange={e => setUsername(e.target.value)}
-						placeholder="Enter your username"
-						required
-						type="text"
-						value={username}
-						disabled={disabled}
-					/>
-				</Form.Group>
+			{!waitingScreen && (
+				<>
+					<h1>Welcome to Battleship!</h1>
+					<Form onSubmit={handleSubmit}>
+						<Form.Group className="mb-3" controlId="username">
+							<Form.Label>Username</Form.Label>
+							<Form.Control
+								onChange={e => setUsername(e.target.value)}
+								placeholder="Enter your username"
+								required
+								type="text"
+								value={username}
+								disabled={disabled}
+							/>
+						</Form.Group>
 
-				<Button
-					variant="primary"
-					type="submit"
-					disabled={!username}>
-					Play
-				</Button>
-			</Form>
-			<p>{message}</p>
-			</>
-		)}
+						<Button
+							variant="primary"
+							type="submit"
+							disabled={!username}>
+							Play
+						</Button>
+					</Form>
+				</>
+			)}
 
-		{waitingScreen && (
-			<div className="d-flex justify-content-center flex-column align-items-center">
-				<Image src={WaitingBoat} fluid/>
-				<h1>Waiting for opponent...</h1>
-			</div>
-			
-		)}
-			
+			{waitingScreen && (
+				<div className="d-flex justify-content-center flex-column align-items-center">
+					<Image src={WaitingBoat} fluid />
+					<h1>Waiting for opponent...</h1>
+				</div>
+			)}
 		</>
 	)
 }
