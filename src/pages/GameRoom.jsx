@@ -81,7 +81,6 @@ const GameRoom = () => {
 
     return (
         <>
-            <h1>{room_id}</h1>
             <div className="row d-flex align-items-center">
                 <div className="col-md-5">
                     <div id="user-gameboard">
