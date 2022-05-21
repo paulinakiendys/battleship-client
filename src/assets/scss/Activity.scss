@@ -1,0 +1,11 @@
+.activity-log {
+    height: 10rem;
+    width: 90%;
+}
+
+@media screen and (min-width: 768px) {
+    .activity-log {
+        height: 30rem;
+        width: 100%;
+    }
+}
