@@ -35,6 +35,7 @@ const GameRoom = () => {
         // 1. construct message object
         const messageObject = {
             room: room_id,
+            username: gameUsername,
             timestamp: Date.now(),
             content: message,
         }
@@ -60,6 +61,9 @@ const GameRoom = () => {
         // listen for when a user disconnects
         socket.on('user:disconnected', handleIncomingMessage)
 
+        // listen for game instructions
+        socket.on('log:instructions', handleIncomingMessage)
+
         // listen for incoming messages
         socket.on('chat:incoming', handleIncomingMessage)
 
@@ -70,6 +74,7 @@ const GameRoom = () => {
             socket.off('users:usernames', handleIncomingUsernames)
             socket.off('user:disconnected', handleIncomingMessage)
             socket.off('chat:incoming', handleIncomingMessage)
+            socket.off('log:instructions', handleIncomingMessage)
         }
 
     }, [socket, gameUsername, navigate])
@@ -101,7 +106,7 @@ const GameRoom = () => {
                                     return (
                                         <ListGroup.Item key={index} className="message">
                                             <span className="time">{time} </span>
-                                            {/* <span className="user">{message.username}:</span> */}
+                                            <span className="user">{message.username} </span>
                                             <span className="content">{message.content}</span>
                                         </ListGroup.Item>
                                     )
