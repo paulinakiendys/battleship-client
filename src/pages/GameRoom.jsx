@@ -64,77 +64,62 @@ const GameRoom = () => {
     return (
         <>
             <h1>{room_id}</h1>
-            <div id="game-wrapper">
-                <div id="board-wrapper">
-                    <h2>Your Battleships</h2>
-                    <h3>Ships remaining: <span>3</span></h3>
-                    <div id="board">
-                        {/* Here is user's board */}
-                    </div>
-                </div>
-                <div id="chat-wrapper">
-                    <div id="chat">
-                        {/* Here is log/chat */}
-                        <ListGroup id="messages">
-                            {messages.map((message, index) => {
-                                const ts = new Date(message.timestamp)
-                                const time = ts.toLocaleTimeString()
-                                return (
-                                    <ListGroup.Item key={index} className="message">
-                                        <span className="time">{time} </span>
-                                        {/* <span className="user">{message.username}:</span> */}
-                                        <span className="content">{message.content}</span>
-                                    </ListGroup.Item>
-                                )
-                            }
-                            )}
-                        </ListGroup>
-                    </div>
-                    <Form onSubmit={handleSubmit}>
-                        <InputGroup>
-                            <Form.Control
-                                type='text'
-                                placeholder='Send message'
-                                value={message}
-                                onChange={e => setMessage(e.target.value)}
-                                required
-                            />
-                            <Button type='submit' disabled={!message.length}>Send</Button>
-                        </InputGroup>
-                    </Form>
-                    <div id="buttons-wrapper">
-                        <Button variant='warning'>Randomize</Button>
-                        <Button variant='success'>Ready</Button>
-                    </div>
-                </div>
-                <div id="board-wrapper">
-                    <h2>Opponent's Battleships</h2>
-                    <h3>Ships remaining: <span>4</span></h3>
-                    <div id="board">
-                        {/* Here is opponent's board */}
-                    </div>
-                </div>
-            </div>
             <div className="row d-flex align-items-center">
                 <div className="col-md-5">
                     <div id="user-gameboard">
-                        <GameBoard 
+                        <GameBoard
                             owner="user"
-                            title= {gameUsername}
+                            title={gameUsername}
                         />
                         <p className="text-center">Ships left: <span id="opponents-ships"></span></p>
                     </div>
                 </div>
 
                 <div className="col-md-2 d-flex justify-content-center">
-                    <ActivityLog />
+                    {/* <ActivityLog /> */}
+                    {/* @todo: make ChatLog a component */}
+                    <div id="chat-wrapper">
+                        <div id="chat-log">
+                            {/* Here is log/chat */}
+                            <ListGroup id="messages">
+                                {messages.map((message, index) => {
+                                    const ts = new Date(message.timestamp)
+                                    const time = ts.toLocaleTimeString()
+                                    return (
+                                        <ListGroup.Item key={index} className="message">
+                                            <span className="time">{time} </span>
+                                            {/* <span className="user">{message.username}:</span> */}
+                                            <span className="content">{message.content}</span>
+                                        </ListGroup.Item>
+                                    )
+                                }
+                                )}
+                            </ListGroup>
+                        </div>
+                        <Form onSubmit={handleSubmit}>
+                            <InputGroup>
+                                <Form.Control
+                                    type='text'
+                                    placeholder='Send message'
+                                    value={message}
+                                    onChange={e => setMessage(e.target.value)}
+                                    required
+                                />
+                                <Button type='submit' disabled={!message.length}>Send</Button>
+                            </InputGroup>
+                        </Form>
+                        <div id="buttons-wrapper">
+                            <Button variant='warning'>Randomize</Button>
+                            <Button variant='success'>Ready</Button>
+                        </div>
+                    </div>
                 </div>
 
                 <div className="col-md-5">
                     <div id="opponent-gameboard">
-                        <GameBoard 
+                        <GameBoard
                             owner="opponent"
-                            title="Opponent" 
+                            title="Opponent"
                         />
                         <p className="text-center">Ships left: <span id="opponents-ships"></span></p>
                     </div>
