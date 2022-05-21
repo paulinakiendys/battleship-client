@@ -13,6 +13,17 @@ const GameRoom = () => {
     const { gameUsername, socket } = useGameContext()
     const navigate = useNavigate()
 
+    const handleReadyClick = () => {
+        console.log("You clicked me!")
+        // disable buttons and hide buttons-wrapper
+        // send 'ready' event to server. Server creates message object and sends it to client.
+        // listen for 'Waiting for opponent to place ships' message
+        // emit user:waiting and a status callback
+        // check if opponent is ready as well (status -> ready: true/false)
+        // if (status.ready = false), listen for opponent ready until ready = true, then emit positions ready
+        // if (staus.ready = true), call function to get random player (the one who's gonna start)
+    }
+
     const handleIncomingUsernames = (userOne, userTwo) => {
         if (gameUsername === userOne) {
             setOpponent(userTwo)
@@ -127,7 +138,12 @@ const GameRoom = () => {
                         </Form>
                         <div id="buttons-wrapper">
                             <Button variant='warning'>Randomize</Button>
-                            <Button variant='success'>Ready</Button>
+                            <Button 
+                                variant='success'
+                                onClick={handleReadyClick}
+                            >
+                                Ready
+                            </Button>
                         </div>
                     </div>
                 </div>
