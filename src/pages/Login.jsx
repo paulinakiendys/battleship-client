@@ -1,7 +1,8 @@
 import { useState } from 'react'
-import { Form, Button } from 'react-bootstrap'
+import { Form, Button, Image } from 'react-bootstrap'
 import { useGameContext } from '../contexts/GameContextProvider'
 import { useNavigate } from "react-router-dom"
+import WaitingBoat from "../assets/images/boat-wave.gif"
 
 const Login = () => {
 	const [username, setUsername] = useState('')
@@ -9,6 +10,8 @@ const Login = () => {
 	const [disabled, setDisabled] = useState(false)
 	const { setGameUsername, socket } = useGameContext()
 	const navigate = useNavigate()
+	const [waitingScreen, setWaitingScreen] = useState(false)
+	
 
 	const handleSubmit = e => {
 		e.preventDefault()
@@ -34,6 +37,7 @@ const Login = () => {
 				/**
 				 * @todo Hanna: hide form and show gif
 				 */
+				setWaitingScreen(true)
 
 				// listening for if an opponent has been found
 				socket.on('user:ready', (room_id) => {
@@ -46,7 +50,7 @@ const Login = () => {
 				})
 			} else if (!status.waiting) {
 				// if we are not waiting for an opponent
-
+				setWaitingScreen(false)
 				// redirect to game room
 				navigate(`/game/${status.room_id}`)
 			}
@@ -56,6 +60,8 @@ const Login = () => {
 
 	return (
 		<>
+		{!waitingScreen && (
+			<>
 			<h1>Welcome to Battleship!</h1>
 			<Form onSubmit={handleSubmit}>
 				<Form.Group className="mb-3" controlId="username">
@@ -78,6 +84,17 @@ const Login = () => {
 				</Button>
 			</Form>
 			<p>{message}</p>
+			</>
+		)}
+
+		{waitingScreen && (
+			<div className="d-flex justify-content-center flex-column align-items-center">
+				<Image src={WaitingBoat} fluid/>
+				<h1>Waiting for opponent...</h1>
+			</div>
+			
+		)}
+			
 		</>
 	)
 }

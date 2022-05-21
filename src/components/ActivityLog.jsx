@@ -10,7 +10,7 @@ export default function ActivityLog() {
         <Card.Body>
             <Card.Title>🛳 Activity log</Card.Title>
             <Card.Subtitle className="mb-2 text-muted">Game room: {room_id}</Card.Subtitle>
-            <Card.Text>
+            <Card.Text id="activities">
             {/* Place activities here*/ }
             </Card.Text>
         </Card.Body>

@@ -6,11 +6,17 @@ import { useEffect, useState } from 'react'
 import { Button, Form, InputGroup, ListGroup } from 'react-bootstrap'
 
 const GameRoom = () => {
+<<<<<<< HEAD
     const [message, setMessage] = useState('')
     const [messages, setMessages] = useState([])
     const { room_id } = useParams()
     const { gameUsername, socket } = useGameContext()
     const navigate = useNavigate()
+=======
+    const { room_id, gameUsername } = useParams()
+    const [opponentDisconnected, setOpponentDisconnected] = useState(false)
+    const { socket } = useGameContext()
+>>>>>>> feature-hh-design
 
     const handleIncomingMessage = message => {
         console.log("Received a new message", message)
@@ -60,9 +66,6 @@ const GameRoom = () => {
         }
 
     }, [socket, gameUsername, navigate])
-
-    console.log("Users:", users)
-    console.log("Game username:", gameUsername)
 
     return (
         <>
