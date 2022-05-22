@@ -29,7 +29,6 @@ export default function GameView() {
             </Modal.Footer>
         </Modal>
         </div>
-        
 
         <div className="d-flex align-items-center justify-content-center">
             <div id="user-gameboard">
@@ -38,7 +37,6 @@ export default function GameView() {
                     title="Your field"
                 />
             </div>
-            
             <div id="opponent-gameboard">
                 <GameBoard 
                     owner="opponent"
@@ -47,6 +45,6 @@ export default function GameView() {
             </div>
         </div>
         </>
-        
+
     )
 }
