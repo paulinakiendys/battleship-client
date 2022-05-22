@@ -7,3 +7,19 @@
 * {
     font-family: 'Quicksand';
 }
+
+#chat-log {
+    border: 1px solid grey;
+    height: 300px;
+    width: 300px;
+    overflow-y: scroll;
+}
+
+#buttons-wrapper {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.user {
+    font-weight: bold;
+}
