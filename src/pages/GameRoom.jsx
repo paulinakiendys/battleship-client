@@ -13,6 +13,13 @@ const GameRoom = () => {
     const { gameUsername, socket } = useGameContext()
     const navigate = useNavigate()
 
+    const handleRandomizeClick = () => {
+        console.log("You clicked me!")
+        /**
+         * @todo Tirapat: call function to randomize ship positions
+         */
+    }
+
     const handleReadyClick = () => {
         console.log("You clicked me!")
         // disable buttons and hide buttons-wrapper
@@ -137,8 +144,13 @@ const GameRoom = () => {
                             </InputGroup>
                         </Form>
                         <div id="buttons-wrapper">
-                            <Button variant='warning'>Randomize</Button>
-                            <Button 
+                            <Button
+                                variant='warning'
+                                onClick={handleRandomizeClick}
+                            >
+                                Randomize
+                            </Button>
+                            <Button
                                 variant='success'
                                 onClick={handleReadyClick}
                             >
