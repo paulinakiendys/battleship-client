@@ -12,23 +12,31 @@ const GameRoom = () => {
     const { room_id } = useParams()
     const { gameUsername, socket } = useGameContext()
     const navigate = useNavigate()
+    const [hideButtons, setHideButtons] = useState(false)
 
     const handleRandomizeClick = () => {
         console.log("You clicked me!")
         /**
-         * @todo Tirapat: call function to randomize ship positions
+         * @todo Tirapat: call function to randomly place ships
          */
     }
 
     const handleReadyClick = () => {
-        console.log("You clicked me!")
-        // disable buttons and hide buttons-wrapper
-        // send 'ready' event to server. Server creates message object and sends it to client.
-        // listen for 'Waiting for opponent to place ships' message
-        // emit user:waiting and a status callback
-        // check if opponent is ready as well (status -> ready: true/false)
-        // if (status.ready = false), listen for opponent ready until ready = true, then emit positions ready
-        // if (staus.ready = true), call function to get random player (the one who's gonna start)
+
+        // hide buttons
+        setHideButtons(true)
+
+        // tell server that client is ready to start the game
+        socket.emit('game:start', (status) => {
+
+            if (!status.room.ready) {
+                // listen for waiting message
+                socket.on('log:waiting', handleIncomingMessage)
+            } else if (status.room.ready) {
+                // emit that both users have positioned their ships
+                socket.emit('ships:ready', room_id)
+            }
+        })
     }
 
     const handleIncomingUsernames = (userOne, userTwo) => {
@@ -85,6 +93,8 @@ const GameRoom = () => {
         // listen for incoming messages
         socket.on('chat:incoming', handleIncomingMessage)
 
+        socket.on('log:startingPlayer', handleIncomingMessage)
+
         return () => {
             console.log("Running cleanup")
 
@@ -93,6 +103,7 @@ const GameRoom = () => {
             socket.off('user:disconnected', handleIncomingMessage)
             socket.off('chat:incoming', handleIncomingMessage)
             socket.off('log:instructions', handleIncomingMessage)
+            socket.off('log:startingPlayer', handleIncomingMessage)
         }
 
     }, [socket, gameUsername, navigate])
@@ -143,20 +154,22 @@ const GameRoom = () => {
                                 <Button type='submit' disabled={!message.length}>Send</Button>
                             </InputGroup>
                         </Form>
-                        <div id="buttons-wrapper">
-                            <Button
-                                variant='warning'
-                                onClick={handleRandomizeClick}
-                            >
-                                Randomize
-                            </Button>
-                            <Button
-                                variant='success'
-                                onClick={handleReadyClick}
-                            >
-                                Ready
-                            </Button>
-                        </div>
+                        {!hideButtons && (
+                            <div id="buttons-wrapper">
+                                <Button
+                                    variant='warning'
+                                    onClick={handleRandomizeClick}
+                                >
+                                    Randomize
+                                </Button>
+                                <Button
+                                    variant='success'
+                                    onClick={handleReadyClick}
+                                >
+                                    Ready
+                                </Button>
+                            </div>
+                        )}
                     </div>
                 </div>
 
