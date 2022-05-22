@@ -7,40 +7,63 @@ let position = []
 // List of Ships
  const shipsArray = [
   {   
+      shipId: 1,
       length: 4,
       row: "",
       col: "",
       position: []
   },
-  {
+  {   
+      shipId: 2,
       length: 3,
       row: "",
-      col: ""
+      col: "",
+      position: []
   },
-  {
+  {   
+      shipId: 3,
       length: 2,
       row: "",
-      col: ""
+      col: "",
+      position: []
   },
-  {
+  { 
+      shipId: 4,
       length: 2,
       row: "",
-      col: ""
+      col: "",
+      
   }
 ]
 
-shipsArray.forEach(ship => {generateRandomLocation(ship)}) 
 
-// Give each users a list of ships 
+// Give user a list of ships 
 userShips = shipsArray.concat(userShips)
-userShips.forEach(ship => {generateRandomLocation(ship)})
+userShips.forEach(ship => {generateRandomLocation(ship)
+  
+  // Titta mer på detta
+ /*  for(let i = ship.row + ship.col; i < ship.row + ship.col + ship.length; i++) {
+    ship.position.push(i)
+  } */
+})
 console.log("userShips", userShips)
 
-shipsArray.forEach(ship => {
-  ship.position = position
-  console.log("ship position", ship.position)
-  ship.position.push([ship.col + ship.row, ship.col + (ship.row + 1)])
-})
+// Check for duplicates
+const lookup = userShips.reduce((a, e) => {
+  a[e.row] = ++a[e.row] || 0;
+  return a;
+}, {});
+console.log("Checking duplicates",userShips.filter(e => lookup[e.row]));
+
+
+// Testing index 0 in userShips array
+shipsArray[0].position.push([shipsArray[0].col + shipsArray[0].row, shipsArray[0].col + (shipsArray[0].row + 1)])
+console.log("shipOne", shipsArray[0])
+
+// TODO: Based on ship length get the rest of the coordinates 
+
+// TODO: Check if the whole ship is inside of board based on length from startingPos(row + col)
+
 
 export default function GameBoard(props) {
 

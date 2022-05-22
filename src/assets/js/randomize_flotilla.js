@@ -3,17 +3,19 @@ const board = {
     "cols": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]
 }
 
-    
+
+
 export const generateRandomLocation = (ship) => {
-    let randomize = Math.floor(Math.random() * 10);
+    let randomize = Math.floor(board.rows.length * Math.random());
     let randomRow = board.rows[randomize]
     let randomCol = board.cols[randomize]
 
+    // Get rid of duplicates
+    let drawnRow = board.rows.splice(randomize, 1)
+    let drawnCol = board.cols.splice(randomize, 1)
+
     ship.row = randomRow
     ship.col = randomCol
-    
-    // Make so that randomRow and randomCol are unique 
-  
 }
 
  /**
