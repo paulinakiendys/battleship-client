@@ -32,6 +32,7 @@ let position = []
       length: 2,
       row: "",
       col: "",
+      position: []
       
   }
 ]
@@ -42,28 +43,41 @@ userShips = shipsArray.concat(userShips)
 userShips.forEach(ship => {generateRandomLocation(ship)
   
   // Titta mer på detta
- /*  for(let i = ship.row + ship.col; i < ship.row + ship.col + ship.length; i++) {
+  /* for(let i = ship.row + ship.col; i < ship.row + ship.col + ship.length; i++) {
     ship.position.push(i)
   } */
 })
 console.log("userShips", userShips)
 
-// Check for duplicates
-const lookup = userShips.reduce((a, e) => {
-  a[e.row] = ++a[e.row] || 0;
-  return a;
-}, {});
-console.log("Checking duplicates",userShips.filter(e => lookup[e.row]));
-
-
-// Testing index 0 in userShips array
-shipsArray[0].position.push([shipsArray[0].col + shipsArray[0].row, shipsArray[0].col + (shipsArray[0].row + 1)])
-console.log("shipOne", shipsArray[0])
-
-// TODO: Based on ship length get the rest of the coordinates 
-
-// TODO: Check if the whole ship is inside of board based on length from startingPos(row + col)
-
+// Förbätra om har tid
+// ShipId 1
+if(userShips[0].row >= 5) {
+  console.log("Going minus")
+  shipsArray[0].position = ([shipsArray[0].col + shipsArray[0].row, shipsArray[0].col + (shipsArray[0].row - 1), shipsArray[0].col + (shipsArray[0].row - 2), shipsArray[0].col + (shipsArray[0].row - 3)])
+} else {
+  shipsArray[0].position = ([shipsArray[0].col + shipsArray[0].row, shipsArray[0].col + (shipsArray[0].row + 1), shipsArray[0].col + (shipsArray[0].row + 2), shipsArray[0].col + (shipsArray[0].row + 3)])
+}
+// ShipId 2
+if(userShips[1].row >= 5) {
+  console.log("Going minus")
+  shipsArray[1].position = ([shipsArray[1].col + shipsArray[1].row, shipsArray[1].col + (shipsArray[1].row - 1), shipsArray[1].col + (shipsArray[1].row - 2)])
+} else {
+  shipsArray[1].position = ([shipsArray[1].col + shipsArray[1].row, shipsArray[1].col + (shipsArray[1].row + 1), shipsArray[1].col + (shipsArray[1].row + 2)])
+}
+// ShipId 3
+if(userShips[2].row >= 5) {
+  console.log("Going minus")
+  shipsArray[2].position = ([shipsArray[2].col + shipsArray[2].row, shipsArray[2].col + (shipsArray[2].row - 1)])
+} else {
+  shipsArray[2].position = ([shipsArray[2].col + shipsArray[2].row, shipsArray[2].col + (shipsArray[2].row + 1)])
+}
+// ShipId 4
+if(userShips[3].row >= 5) {
+  console.log("Going minus")
+  shipsArray[3].position = ([shipsArray[3].col + shipsArray[3].row, shipsArray[3].col + (shipsArray[3].row - 1)])
+} else {
+  shipsArray[3].position = ([shipsArray[3].col + shipsArray[3].row, shipsArray[3].col + (shipsArray[3].row + 1)])
+}
 
 export default function GameBoard(props) {
 
@@ -78,8 +92,6 @@ export default function GameBoard(props) {
         e.target.innerHTML = ""
         e.target.classList.add("strike")
     }
-
-    
    
     // Jag tror BACKEND ska checka detta // Man kan lagra båda spelarna skepp lista i servern sen kollar servern om någon av skeppen har träffats skickar det till klienten där klienten endast visar hit or miss. 
   /*   const checkClick = (e) => {
