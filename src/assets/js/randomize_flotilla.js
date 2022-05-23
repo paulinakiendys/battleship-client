@@ -1,23 +1,21 @@
-
 const board = {
     "rows": [9, 8, 7, 6, 5, 4, 3, 2, 1, 0],
     "cols": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]
 }
 
-const generateRandomLocation = (ship) => {
-    let randomize = Math.floor(Math.random() * 10);
+
+
+export const generateRandomLocation = (ship) => {
+    let randomize = Math.floor(board.rows.length * Math.random());
     let randomRow = board.rows[randomize]
     let randomCol = board.cols[randomize]
 
+    // Get rid of duplicates
+    let drawnRow = board.rows.splice(randomize, 1)
+    let drawnCol = board.cols.splice(randomize, 1)
+
     ship.row = randomRow
     ship.col = randomCol
-
-    /**
-     * TODO 
-     * ship.row and ship.col should be unique for each ship
-     * Otherwise run generateRandomLocation until all is unique
-     */
-
 }
 
  /**
@@ -29,7 +27,16 @@ const generateRandomLocation = (ship) => {
 */
 /* const generateRandomDirection = () => {
     let randomDirection = Math.floor(Math.random() * 4) +1
-}
- */
+} */
 
-export default generateRandomLocation
+
+export const getAllCells = () => {
+    let table = document.getElementById('userTable')
+    
+    for (let r = 0, n = table.rows.length; r < n; r++) {
+    for (let c = 0, m = table.rows[r].cells.length; c < m; c++) {
+        console.log("Found", table.rows[r].cells[c])
+    }
+}
+}
+
