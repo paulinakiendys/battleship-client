@@ -5,7 +5,6 @@ import './assets/scss/App.scss'
 import Login from './pages/Login'
 import GameRoom from './pages/GameRoom'
 import Container from 'react-bootstrap/Container'
-import GameView from './pages/GameView'
 
 const App = () => {
 	return (
@@ -17,7 +16,6 @@ const App = () => {
 					<Route path="/" element={<Login />} />
 					<Route path="/game/:room_id" element={<GameRoom />} />
 					<Route path="*" element={<NotFound />} />
-					<Route path="/game" element={<GameView />} />
 				</Routes>
 			</Container>
 		</div>

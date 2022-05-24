@@ -3,7 +3,7 @@ const board = {
     "cols": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]
 }
 
-
+//TODO - Blir inte helt randomized, vi får kolla på hur vi kan optimera den. Alla skeppen hamnar i en diagonal i mitten hehe
 
 export const generateRandomLocation = (ship) => {
     let randomize = Math.floor(board.rows.length * Math.random());
