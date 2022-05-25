@@ -1,8 +1,10 @@
 
 import {generateRandomLocation, getAllCells} from '../assets/js/randomize_flotilla'
+import { useState, useRef, useEffect } from "react"
+import { random} from '../pages/GameRoom'
 
 let userShips = []
-let position = []
+
 
 // List of Ships
  const shipsArray = [
@@ -11,28 +13,36 @@ let position = []
       length: 4,
       row: "",
       col: "",
-      position: []
+      position: [],
+      color: "green",
+      sunk: false
   },
   {   
       shipId: 2,
       length: 3,
       row: "",
       col: "",
-      position: []
+      position: [],
+      color: "red", 
+      sunk: false,
   },
   {   
       shipId: 3,
       length: 2,
       row: "",
       col: "",
-      position: []
+      position: [],
+      color: "blue",
+      sunk: false,
   },
   { 
       shipId: 4,
       length: 2,
       row: "",
       col: "",
-      position: []
+      position: [],
+      color: "orange",
+      sunk: false,
       
   }
 ]
@@ -42,6 +52,7 @@ let position = []
 userShips = shipsArray.concat(userShips)
 userShips.forEach(ship => {generateRandomLocation(ship)
 })
+
 console.log("userShips", userShips)
 
 // Förbätra om har tid
@@ -74,13 +85,41 @@ if(userShips[3].row >= 5) {
   shipsArray[3].position = ([shipsArray[3].col + shipsArray[3].row, shipsArray[3].col + (shipsArray[3].row + 1)])
 }
 
+
+
 export default function GameBoard(props) {
 
+    const ref = useRef(null)
     const board = {
         "rows": [9, 8, 7, 6, 5, 4, 3, 2, 1, 0],
         "cols": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]
     }
 
+    useEffect(() => {
+      const table = ref.current
+     if (table.classList.contains("user")) {
+        
+      userShips.forEach((ship, index) => {
+        for (const row of table.rows) {  
+          for (const cell of row.cells) {   
+
+            if(ship.position.includes(cell.id)) {
+              console.log("Boat")
+              cell.style.backgroundColor = ship.color
+            } else {
+              console.log(cell.innerText) 
+            }
+          }
+        }
+          
+        })
+
+     } 
+      
+    }, [])
+
+
+    // Man ska inte kunna clicka på sin spelplan, endast motståndaren
    /*  const testCode = (e) => {
         console.log("Testing: ", e.target.id)
         console.log(e.target)
@@ -89,11 +128,12 @@ export default function GameBoard(props) {
     } */
    
     return (
-      <table id="userTable">
+      <table ref={ref} id="userTable" className={props.owner}>
         <caption className="table-title">{props.title}</caption>
             <tbody>
             {board.rows.map(row => (
               <tr key={row}>
+
                 {board.rows.map(col => (
                   <td className={props.owner} /* onClick={testCode} */ id={board.rows[row] + board.cols[col]} key={board.rows[row] + board.cols[col]}>{board.rows[row] + board.cols[col]}</td>
                 ))}
