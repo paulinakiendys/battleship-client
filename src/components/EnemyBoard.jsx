@@ -1,8 +1,11 @@
-import {socket} from '../contexts/GameContextProvider'
+import { useGameContext } from '../contexts/GameContextProvider'
+import { useParams } from 'react-router-dom'
 
-let shotFired = -1;
+let shotFired;
 
-export default function GameBoard(props) {
+export default function EnemyBoard(props) {
+  const { room_id } = useParams()
+  const { gameUsername, socket } = useGameContext()
 
   const board = {
     "rows": [9, 8, 7, 6, 5, 4, 3, 2, 1, 0],
@@ -11,10 +14,11 @@ export default function GameBoard(props) {
 
     // Send ID of the cell the user clicked on to fire
   const checkClick = (e) => {
-      console.log(e.target)
+      console.log("HELLO", e.target)
       shotFired = e.target.id
-      socket.emit('fire', shotFired)
-      console.log("shotFired", shotFired)
+
+      //emit fire
+      socket.emit('user:fire', shotFired, room_id)
 
       socket.on('error', (err) => {
         console.log("err",err)

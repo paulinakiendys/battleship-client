@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from 'react-router-dom'
 import { useGameContext } from '../contexts/GameContextProvider'
-import GameBoard from '../components/GameBoard'
+import { GameBoard } from '../components/GameBoard'
 import EnemyBoard from '../components/EnemyBoard'
 import ActivityLog from '../components/ActivityLog'
 import { useEffect, useState } from 'react'
@@ -24,18 +24,31 @@ const GameRoom = () => {
 
     const handleReadyClick = () => {
 
+        let userShips = {   
+            shipId: 1,
+            length: 4,
+            row: "",
+            col: "",
+            position: [],
+            color: "green",
+            sunk: false
+        }
+
         // hide buttons
         setHideButtons(true)
 
         // tell server that client is ready to start the game
-        socket.emit('game:start', (status) => {
+        socket.emit('game:start', userShips, (status) => {
 
             if (!status.room.ready) {
                 // listen for waiting message
                 socket.on('log:waiting', handleIncomingMessage)
             } else if (status.room.ready) {
                 // emit that both users have positioned their ships
-                socket.emit('ships:ready', room_id)
+
+                //TODO Send the userships to the server
+                let userShips = ['test', 'test']
+                socket.emit('ships:ready', room_id, userShips)
             }
         })
     }
@@ -90,6 +103,9 @@ const GameRoom = () => {
 
         // listen for game instructions
         socket.on('log:instructions', handleIncomingMessage)
+
+        // listen for game instructions
+        socket.on('log:fire', handleIncomingMessage)
 
         // listen for incoming messages
         socket.on('chat:incoming', handleIncomingMessage)
