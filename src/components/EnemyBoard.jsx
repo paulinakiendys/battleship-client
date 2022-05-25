@@ -25,18 +25,18 @@ export default function EnemyBoard(props) {
       })
   }
    
-  return (
-    <table id="enemyTable">
-      <caption className="table-title">{props.title}</caption>
-          <tbody>
-          {board.rows.map(row => (
-            <tr key={row}>
-              {board.rows.map(col => (
-                <td className={props.owner} onClick={checkClick} id={board.rows[row] + board.cols[col]} key={board.rows[row] + board.cols[col]}>{board.rows[row] + board.cols[col]}</td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-    </table>
-  )
+    return (
+      <table id="enemyTable">
+        <caption className="table-title">{props.title}</caption>
+            <tbody>
+            {board.rows.map(row => (
+              <tr key={row}>
+                {board.rows.map(col => (
+                  <td className={props.owner} id={board.rows[row] + board.cols[col]} key={board.rows[row] + board.cols[col]}>{board.rows[row] + board.cols[col]}</td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+      </table>
+    )
 }

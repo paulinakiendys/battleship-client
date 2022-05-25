@@ -1,5 +1,5 @@
 
-import {generateRandomLocation, getAllCells} from '../assets/js/randomize_flotilla'
+import {generateRandomLocation} from '../assets/js/randomize_flotilla'
 import { useState, useRef, useEffect } from "react"
 import { random} from '../pages/GameRoom'
 
