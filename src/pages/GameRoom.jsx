@@ -1,6 +1,7 @@
 import { useNavigate, useParams } from 'react-router-dom'
 import { useGameContext } from '../contexts/GameContextProvider'
 import GameBoard from '../components/GameBoard'
+import EnemyBoard from '../components/EnemyBoard'
 import ActivityLog from '../components/ActivityLog'
 import { useEffect, useState } from 'react'
 import { Button, Form, InputGroup, ListGroup } from 'react-bootstrap'
@@ -175,7 +176,7 @@ const GameRoom = () => {
 
                 <div className="col-md-5">
                     <div id="opponent-gameboard">
-                        <GameBoard
+                        <EnemyBoard
                             owner="opponent"
                             title={opponent}
                         />

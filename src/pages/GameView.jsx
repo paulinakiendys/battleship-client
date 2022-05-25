@@ -1,4 +1,5 @@
 import GameBoard from '../components/GameBoard'
+import EnemyBoard from '../components/EnemyBoard'
 import { useState } from 'react'
 import { Button, Modal } from 'react-bootstrap'
 
@@ -38,7 +39,7 @@ export default function GameView() {
                 />
             </div>
             <div id="opponent-gameboard">
-                <GameBoard 
+                <EnemyBoard 
                     owner="opponent"
                     title="Opponent's field" 
                 />
