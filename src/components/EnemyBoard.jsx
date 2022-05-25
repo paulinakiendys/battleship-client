@@ -12,18 +12,10 @@ export default function EnemyBoard(props) {
     "cols": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]
   }
 
+  console.log("ROOM ID:", room_id)
+
     // Send ID of the cell the user clicked on to fire
-  const checkClick = (e) => {
-      console.log("HELLO", e.target)
-      shotFired = e.target.id
-
-      //emit fire
-      socket.emit('user:fire', shotFired, room_id)
-
-      socket.on('error', (err) => {
-        console.log("err",err)
-      })
-  }
+  
    
     return (
       <table id="enemyTable">
@@ -32,7 +24,7 @@ export default function EnemyBoard(props) {
             {board.rows.map(row => (
               <tr key={row}>
                 {board.rows.map(col => (
-                  <td className={props.owner} id={board.rows[row] + board.cols[col]} key={board.rows[row] + board.cols[col]}>{board.rows[row] + board.cols[col]}</td>
+                  <td className={props.owner} onClick={props.check} id={board.cols[col] + board.rows[row]} key={board.rows[row] + board.cols[col]}>{board.rows[row] + board.cols[col]}</td>
                 ))}
               </tr>
             ))}

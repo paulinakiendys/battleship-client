@@ -1,10 +1,11 @@
 import { useNavigate, useParams } from 'react-router-dom'
 import { useGameContext } from '../contexts/GameContextProvider'
-import { GameBoard } from '../components/GameBoard'
+import GameBoard from '../components/GameBoard'
 import EnemyBoard from '../components/EnemyBoard'
 import ActivityLog from '../components/ActivityLog'
 import { useEffect, useState } from 'react'
 import { Button, Form, InputGroup, ListGroup } from 'react-bootstrap'
+import { generateUserShips } from '../assets/js/randomize_flotilla'
 
 const GameRoom = () => {
     const [message, setMessage] = useState('')
@@ -14,6 +15,7 @@ const GameRoom = () => {
     const { gameUsername, socket } = useGameContext()
     const navigate = useNavigate()
     const [hideButtons, setHideButtons] = useState(false)
+    const [shipList, setShipList] = useState(4)
 
     const handleRandomizeClick = () => {
         console.log("You clicked me!")
@@ -22,17 +24,21 @@ const GameRoom = () => {
          */
     }
 
+    const checkClick = (e) => {
+        console.log("HELLO", e.target)
+        let shotFired = e.target.id
+  
+        //emit fire
+        socket.emit('user:fire', shotFired, room_id, gameUsername)
+  
+        socket.on('error', (err) => {
+          console.log("err",err)
+        })
+    }
+
     const handleReadyClick = () => {
 
-        let userShips = {   
-            shipId: 1,
-            length: 4,
-            row: "",
-            col: "",
-            position: [],
-            color: "green",
-            sunk: false
-        }
+        let userShips = generateUserShips()
 
         // hide buttons
         setHideButtons(true)
@@ -46,12 +52,18 @@ const GameRoom = () => {
             } else if (status.room.ready) {
                 // emit that both users have positioned their ships
 
-                //TODO Send the userships to the server
-                let userShips = ['test', 'test']
-                socket.emit('ships:ready', room_id, userShips)
+                socket.emit('ships:ready', room_id)
             }
         })
     }
+
+    // //TODO -- tror inte den uppdateras på sidan när statet byter...
+    // const handleShipList = userShipsLeft => {
+    //     console.log("Updated shipslist", userShipsLeft)
+
+    //     // set shiplist
+    //     setShipList(userShipsLeft)
+    // }
 
     const handleIncomingUsernames = (userOne, userTwo) => {
         if (gameUsername === userOne) {
@@ -112,6 +124,8 @@ const GameRoom = () => {
 
         socket.on('log:startingPlayer', handleIncomingMessage)
 
+        //socket.on('ships:left', handleShipList)
+
         return () => {
             console.log("Running cleanup")
 
@@ -133,8 +147,8 @@ const GameRoom = () => {
                         <GameBoard
                             owner="user"
                             title={gameUsername}
+                            shipsleft={shipList}
                         />
-                        <p className="text-center">Ships left: <span id="opponents-ships"></span></p>
                     </div>
                 </div>
 
@@ -195,6 +209,7 @@ const GameRoom = () => {
                         <EnemyBoard
                             owner="opponent"
                             title={opponent}
+                            check={checkClick}
                         />
                         <p className="text-center">Ships left: <span id="opponents-ships"></span></p>
                     </div>
