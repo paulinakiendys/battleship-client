@@ -15,7 +15,9 @@ const GameRoom = () => {
     const { gameUsername, socket } = useGameContext()
     const navigate = useNavigate()
     const [hideButtons, setHideButtons] = useState(false)
-    const [shipList, setShipList] = useState(4)
+    const [shipList, setShipList] = useState()
+
+    let userShips = []
 
     const handleRandomizeClick = () => {
         console.log("You clicked me!")
@@ -34,11 +36,13 @@ const GameRoom = () => {
         socket.on('error', (err) => {
           console.log("err",err)
         })
+        
     }
 
     const handleReadyClick = () => {
 
-        let userShips = generateUserShips()
+        userShips = generateUserShips()
+        setShipList(userShips.length)
 
         // hide buttons
         setHideButtons(true)
