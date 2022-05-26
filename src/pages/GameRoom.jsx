@@ -19,12 +19,12 @@ const GameRoom = () => {
 
     let userShips = []
 
-    const handleRandomizeClick = () => {
-        console.log("You clicked me!")
-        /**
-         * @todo Tirapat: call function to randomly place ships
-         */
-    }
+    // const handleRandomizeClick = () => {
+    //     console.log("You clicked me!")
+    //     /**
+    //      * @todo Tirapat: call function to randomly place ships
+    //      */
+    // }
 
     const checkClick = (e) => {
         console.log("HELLO", e.target)
@@ -186,12 +186,12 @@ const GameRoom = () => {
                         </Form>
                         {!hideButtons && (
                             <div id="buttons-wrapper">
-                                <Button
+                                {/* <Button
                                     variant='warning'
                                     onClick={handleRandomizeClick}
                                 >
                                     Randomize
-                                </Button>
+                                </Button> */}
                                 <Button
                                     variant='success'
                                     onClick={handleReadyClick}

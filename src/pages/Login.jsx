@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Form, Button, Image } from 'react-bootstrap'
+import { Form, Button, Image, Modal } from 'react-bootstrap'
 import { useGameContext } from '../contexts/GameContextProvider'
 import { useNavigate } from "react-router-dom"
 import WaitingBoat from "../assets/images/boat-wave.gif"
@@ -10,6 +10,11 @@ const Login = () => {
 	const { setGameUsername, socket } = useGameContext()
 	const navigate = useNavigate()
 	const [waitingScreen, setWaitingScreen] = useState(false)
+
+	//variables for modal
+	const [show, setShow] = useState(false);
+	const handleClose = () => setShow(false);
+	const handleShow = () => setShow(true);
 
 	const handleSubmit = async function (e) {
 		e.preventDefault()
@@ -51,38 +56,56 @@ const Login = () => {
 
 	return (
 		<>
-			{!waitingScreen && (
-				<>
-					<h1>Welcome to Battleship!</h1>
-					<Form onSubmit={handleSubmit}>
-						<Form.Group className="mb-3" controlId="username">
-							<Form.Label>Username</Form.Label>
-							<Form.Control
-								onChange={e => setUsername(e.target.value)}
-								placeholder="Enter your username"
-								required
-								type="text"
-								value={username}
-								disabled={disabled}
-							/>
-						</Form.Group>
+			<div className="d-flex justify-content-end py-3">
+				<Button className="rounded-circle" variant="secondary" onClick={handleShow}>
+					?
+				</Button>
 
-						<Button
-							variant="primary"
-							type="submit"
-							disabled={!username}>
-							Play
+				<Modal show={show} onHide={handleClose}>
+					<Modal.Header closeButton>
+						<Modal.Title>How to play?</Modal.Title>
+					</Modal.Header>
+					<Modal.Body>The rules are simple. Seek out your opponent's ships and destroy them. Click on a square to fire. Sink all your opponent's ships to win!</Modal.Body>
+					<Modal.Footer>
+						<Button variant="secondary" onClick={handleClose}>
+							Close
 						</Button>
-					</Form>
-				</>
-			)}
+					</Modal.Footer>
+				</Modal>
+			</div>
+			<div id="login">
+				{!waitingScreen && (
+					<>
+						<h1>Battleship</h1>
+						<Form className="text-center" onSubmit={handleSubmit}>
+							<Form.Group className="mb-3" controlId="username">
+								<Form.Control
+									onChange={e => setUsername(e.target.value)}
+									placeholder="Enter username"
+									required
+									type="text"
+									value={username}
+									disabled={disabled}
+								/>
+							</Form.Group>
 
-			{waitingScreen && (
-				<div className="d-flex justify-content-center flex-column align-items-center">
-					<Image src={WaitingBoat} fluid />
-					<h1>Waiting for opponent...</h1>
-				</div>
-			)}
+							<Button
+								variant="primary"
+								type="submit"
+								disabled={!username}>
+								Play
+							</Button>
+						</Form>
+					</>
+				)}
+
+				{waitingScreen && (
+					<div className="d-flex justify-content-center flex-column align-items-center">
+						<Image src={WaitingBoat} fluid />
+						<h1>Waiting for an opponent...</h1>
+					</div>
+				)}
+			</div>
 		</>
 	)
 }
