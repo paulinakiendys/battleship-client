@@ -76,7 +76,7 @@ const GameRoom = () => {
         console.log("Received a new message", message)
 
         // add message to chat
-        setMessages(prevMessages => [...prevMessages, message])
+        setMessages(prevMessages => [message, ...prevMessages])
     }
 
     const handleSubmit = e => {
@@ -185,7 +185,7 @@ const GameRoom = () => {
                             </InputGroup>
                         </Form>
                         {!hideButtons && (
-                            <div id="buttons-wrapper">
+                            <div id="buttons-wrapper" className='py-3'>
                                 {/* <Button
                                     variant='warning'
                                     onClick={handleRandomizeClick}

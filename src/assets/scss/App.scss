@@ -23,10 +23,15 @@ body,
     height: calc(100vh - 200px);
 }
 
+#chat-wrapper {
+    width: 200px;
+    height: 400px;
+}
+
 #chat-log {
     border: 1px solid grey;
     height: 300px;
-    width: 300px;
+    width: 200px;
     overflow-y: scroll;
 }
 
