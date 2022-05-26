@@ -3,7 +3,7 @@ import { useGameContext } from '../contexts/GameContextProvider'
 import GameBoard from '../components/GameBoard'
 import EnemyBoard from '../components/EnemyBoard'
 import ActivityLog from '../components/ActivityLog'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { Button, Form, InputGroup, ListGroup } from 'react-bootstrap'
 import { generateUserShips } from '../assets/js/randomize_flotilla'
 
@@ -57,21 +57,16 @@ const GameRoom = () => {
         })
     }
 
-    // //TODO -- tror inte den uppdateras på sidan när statet byter...
-    // const handleShipList = userShipsLeft => {
-    //     console.log("Updated shipslist", userShipsLeft)
-
-    //     // set shiplist
-    //     setShipList(userShipsLeft)
-    // }
-
-    const handleIncomingUsernames = (userOne, userTwo) => {
-        if (gameUsername === userOne) {
-            setOpponent(userTwo)
-        } else {
-            setOpponent(userOne)
-        }
-    }
+    const handleIncomingUsernames = useCallback(
+        (userOne, userTwo) => {
+            if (gameUsername === userOne) {
+                setOpponent(userTwo)
+            } else {
+                setOpponent(userOne)
+            }
+        },
+        [gameUsername],
+      )
 
     const handleIncomingMessage = message => {
         console.log("Received a new message", message)
@@ -137,7 +132,7 @@ const GameRoom = () => {
             socket.off('log:startingPlayer', handleIncomingMessage)
         }
 
-    }, [socket, gameUsername, navigate])
+    }, [socket, gameUsername, navigate, handleIncomingUsernames])
 
     return (
         <>
