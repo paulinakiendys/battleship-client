@@ -1,16 +1,26 @@
-
-import {generateUserShips} from '../assets/js/randomize_flotilla'
+import { useParams } from 'react-router-dom'
+import { useGameContext } from '../contexts/GameContextProvider'
 import { useState, useRef, useEffect } from "react"
-import { random} from '../pages/GameRoom'
 
 
 export default function GameBoard(props) {
+
+    const { room_id } = useParams()
+    const { gameUsername, socket } = useGameContext()
 
     const ref = useRef(null)
     const board = {
         "rows": [9, 8, 7, 6, 5, 4, 3, 2, 1, 0],
         "cols": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]
     }
+
+    //TODO -- Generera bordet EFTER att vi tagit emot userShipList?
+
+    const generateGameBoard = (userShipList) => {
+      console.log("is it working? ", userShipList)
+    }
+
+    socket.on('user:ships', generateGameBoard)
 
     // useEffect(() => {
     //   const table = ref.current
