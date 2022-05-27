@@ -4,7 +4,7 @@ import GameBoard from '../components/GameBoard'
 import EnemyBoard from '../components/EnemyBoard'
 import ActivityLog from '../components/ActivityLog'
 import { useEffect, useState, useCallback } from 'react'
-import { Button, Form, InputGroup, ListGroup } from 'react-bootstrap'
+import { Button, Form, InputGroup, ListGroup, Toast, ToastContainer } from 'react-bootstrap'
 import { generateUserShips } from '../assets/js/randomize_flotilla'
 
 const GameRoom = () => {
@@ -15,9 +15,10 @@ const GameRoom = () => {
     const { gameUsername, socket } = useGameContext()
     const navigate = useNavigate()
     const [hideButtons, setHideButtons] = useState(false)
-    const [shipList, setShipList] = useState()
-
-    let userShips = []
+    const [shipList, setShipList] = useState(4)
+    const [myTurn, setMyTurn] = useState(false)
+    const [showToast, setShowToast] = useState(false);
+    const toggleShowToast = () => setShowToast(!showToast);
 
     // const handleRandomizeClick = () => {
     //     console.log("You clicked me!")
@@ -26,22 +27,52 @@ const GameRoom = () => {
     //      */
     // }
 
+    const handleStartingPlayer = (randomUser) => {
+        if(randomUser.username === gameUsername) {
+            setMyTurn(true)
+        }
+    }
+
     const checkClick = (e) => {
-        console.log("HELLO", e.target)
-        let shotFired = e.target.id
-  
-        //emit fire
-        socket.emit('user:fire', shotFired, room_id, gameUsername)
-  
-        socket.on('error', (err) => {
-          console.log("err",err)
-        })
+
+        if(myTurn) {
+            console.log("HELLO", e.target)
+            let shotFired = e.target.id
+      
+            //emit fire
+            socket.emit('user:fire', shotFired, room_id, gameUsername)
+      
+            socket.on('error', (err) => {
+              console.log("err",err)
+            })
+
+        } else {
+            toggleShowToast()
+            console.log("Not your turn")
+        }
         
     }
 
+    const handleNewTurn = (message, user) => {
+        console.log("Received a new message", message)
+
+        // add message to chat
+        setMessages(prevMessages => [...prevMessages, message])
+
+        if(user.username === gameUsername) {
+            setMyTurn(false)
+        } else {
+            setMyTurn(true)
+        }
+
+        console.log("My turn is: ", myTurn)
+    }
+
+
+
     const handleReadyClick = () => {
 
-        userShips = generateUserShips()
+        let userShips = generateUserShips()
         setShipList(userShips.length)
 
         // hide buttons
@@ -115,13 +146,17 @@ const GameRoom = () => {
         // listen for game instructions
         socket.on('log:instructions', handleIncomingMessage)
 
-        // listen for game instructions
-        socket.on('log:fire', handleIncomingMessage)
+        // listen for shot / new turn
+        socket.on('log:fire', handleNewTurn)
 
         // listen for incoming messages
         socket.on('chat:incoming', handleIncomingMessage)
 
+        // listen for starting player
         socket.on('log:startingPlayer', handleIncomingMessage)
+
+        // listen for starting player
+        socket.on('user:firstTurn', handleStartingPlayer)
 
         //socket.on('ships:left', handleShipList)
 
@@ -134,12 +169,24 @@ const GameRoom = () => {
             socket.off('chat:incoming', handleIncomingMessage)
             socket.off('log:instructions', handleIncomingMessage)
             socket.off('log:startingPlayer', handleIncomingMessage)
+            socket.off('log:fire', handleIncomingMessage)
+            socket.off('user:firstTurn', handleStartingPlayer)
+            socket.off('log:fire', handleNewTurn)
         }
 
     }, [socket, gameUsername, navigate, handleIncomingUsernames])
 
     return (
         <>
+            <ToastContainer position="top-end">
+                <Toast show={showToast} onClose={toggleShowToast} delay={2000} autohide>
+                    <Toast.Header>
+                        <strong className="me-auto">Captain!</strong>
+                    </Toast.Header>
+                    <Toast.Body>Stay calm, it's not your turn yet 🛳</Toast.Body>
+                </Toast>
+            </ToastContainer>
+
             <div className="row d-flex align-items-center">
                 <div className="col-md-5">
                     <div id="user-gameboard">
