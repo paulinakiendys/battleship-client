@@ -16,7 +16,7 @@ export default function GameBoard({ owner, title, shipsleft }) {
   //TODO -- Generera bordet EFTER att vi tagit emot userShipList?
 
   const generateGameBoard = (userShipList) => {
-    // console.log("is it working? ", userShipList)
+    console.log("is it working? ", userShipList)
   }
 
   socket.on('user:ships', generateGameBoard)
