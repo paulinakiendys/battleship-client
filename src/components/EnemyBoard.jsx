@@ -39,7 +39,7 @@ export default function EnemyBoard({ owner, title, check }) {
               {board.cols.map((letter, index) => (
                 <td
                   key={index}
-                  id={number + letter}
+                  id={letter + number}
                   className={owner}
                   onClick={check}
                 >
