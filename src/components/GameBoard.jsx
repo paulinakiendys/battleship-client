@@ -74,7 +74,7 @@ export default function GameBoard({ owner, title, shipsleft }) {
               {board.cols.map((letter, index) => (
                 <td
                   key={index}
-                  id={number + letter}
+                  id={letter + number}
                   className={owner}
                 >
                   {/* {letter + number} */}

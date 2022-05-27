@@ -15,10 +15,11 @@ const GameRoom = () => {
     const { gameUsername, socket } = useGameContext()
     const navigate = useNavigate()
     const [hideButtons, setHideButtons] = useState(false)
-    const [shipList, setShipList] = useState(4)
     const [myTurn, setMyTurn] = useState(false)
     const [showToast, setShowToast] = useState(false);
     const toggleShowToast = () => setShowToast(!showToast);
+    const [userShipsLeft, setUserShipsLeft] = useState([1,2,3,4]);
+    const [opponentsLeft, setOpponentsShipsLeft] = useState([1,2,3,4]);
 
     // const handleRandomizeClick = () => {
     //     console.log("You clicked me!")
@@ -68,12 +69,17 @@ const GameRoom = () => {
         console.log("My turn is: ", myTurn)
     }
 
+    const handleShipList = (userShipsLeft, opponentShipsLeft) => {
+        setUserShipsLeft(userShipsLeft)
+        console.log("userShipsLeft", userShipsLeft)
 
+        setOpponentsShipsLeft(opponentShipsLeft)
+        console.log("opponentShipsLeft", opponentShipsLeft)
+    }
 
     const handleReadyClick = () => {
 
         let userShips = generateUserShips()
-        setShipList(userShips.length)
 
         // hide buttons
         setHideButtons(true)
@@ -158,7 +164,7 @@ const GameRoom = () => {
         // listen for starting player
         socket.on('user:firstTurn', handleStartingPlayer)
 
-        //socket.on('ships:left', handleShipList)
+        socket.on('ships:left', handleShipList)
 
         return () => {
             console.log("Running cleanup")
@@ -193,7 +199,7 @@ const GameRoom = () => {
                         <GameBoard
                             owner="user"
                             title={gameUsername}
-                            shipsleft={shipList}
+                            shipsleft={userShipsLeft.length}
                         />
                     </div>
                 </div>
@@ -256,6 +262,7 @@ const GameRoom = () => {
                             owner="opponent"
                             title={opponent}
                             check={checkClick}
+                            shipsleft={opponentsLeft.length}
                         />
                         <p className="text-center">Ships left: <span id="opponents-ships"></span></p>
                     </div>

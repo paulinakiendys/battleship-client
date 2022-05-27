@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 
 let shotFired;
 
-export default function EnemyBoard({ owner, title, check }) {
+export default function EnemyBoard({ owner, title, check , shipsleft}) {
   const { room_id } = useParams()
   const { gameUsername, socket } = useGameContext()
 
@@ -19,7 +19,7 @@ export default function EnemyBoard({ owner, title, check }) {
   return (
     <>
       <table id="enemyTable">
-        <caption className="table-title">{title}</caption>
+      <caption className="table-title">{title} <span className="ships-left"> ships left: {shipsleft}</span></caption>
         <thead>
           <tr>
             <th scope="col">#</th>
@@ -39,7 +39,7 @@ export default function EnemyBoard({ owner, title, check }) {
               {board.cols.map((letter, index) => (
                 <td
                   key={index}
-                  id={number + letter}
+                  id={letter + number}
                   className={owner}
                   onClick={check}
                 >
