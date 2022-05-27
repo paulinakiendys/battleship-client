@@ -20,6 +20,7 @@ const GameRoom = () => {
     const toggleShowToast = () => setShowToast(!showToast);
     const [userShipsLeft, setUserShipsLeft] = useState([1,2,3,4]);
     const [opponentsLeft, setOpponentsShipsLeft] = useState([1,2,3,4]);
+    const [winner, setWinner] = useState(null);
 
     // const handleRandomizeClick = () => {
     //     console.log("You clicked me!")
@@ -71,10 +72,10 @@ const GameRoom = () => {
 
     const handleShipList = (userShipsLeft, opponentShipsLeft) => {
         setUserShipsLeft(userShipsLeft)
-        console.log("userShipsLeft", userShipsLeft)
+        console.log("userShipsLeft", userShipsLeft.length)
 
         setOpponentsShipsLeft(opponentShipsLeft)
-        console.log("opponentShipsLeft", opponentShipsLeft)
+        console.log("opponentShipsLeft", opponentShipsLeft.length)
     }
 
     const handleReadyClick = () => {
@@ -135,6 +136,11 @@ const GameRoom = () => {
         setMessage('')
     }
 
+    const handleWinner = (winner) => {
+        setWinner(winner)
+        console.log("winner is ", winner)
+    }
+
     // connect to room when component is mounted
     useEffect(() => {
         // if no username, redirect them to the login page
@@ -142,6 +148,7 @@ const GameRoom = () => {
             navigate('/')
             return
         }
+    
 
         // listen for usernames
         socket.on('users:usernames', handleIncomingUsernames)
@@ -165,6 +172,8 @@ const GameRoom = () => {
         socket.on('user:firstTurn', handleStartingPlayer)
 
         socket.on('ships:left', handleShipList)
+
+        socket.on('winner', handleWinner)
 
         return () => {
             console.log("Running cleanup")
