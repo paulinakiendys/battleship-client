@@ -12,14 +12,14 @@ const GameRoom = () => {
     const [messages, setMessages] = useState([])
     const [opponent, setOpponent] = useState('')
     const { room_id } = useParams()
-    const { gameUsername, socket } = useGameContext()
+    const { clientID, gameUsername, socket } = useGameContext()
     const navigate = useNavigate()
     const [hideButtons, setHideButtons] = useState(false)
     const [myTurn, setMyTurn] = useState(false)
     const [showToast, setShowToast] = useState(false);
     const toggleShowToast = () => setShowToast(!showToast);
-    const [userShipsLeft, setUserShipsLeft] = useState([1,2,3,4]);
-    const [opponentsLeft, setOpponentsShipsLeft] = useState([1,2,3,4]);
+    const [remainingShipsLeftside, setRemainingShipsLeftside] = useState([1, 2, 3, 4]);
+    const [remainingShipsRightside, setRemainingShipsRightside] = useState([1, 2, 3, 4]);
     const [winner, setWinner] = useState(null);
 
     // const handleRandomizeClick = () => {
@@ -30,52 +30,55 @@ const GameRoom = () => {
     // }
 
     const handleStartingPlayer = (randomUser) => {
-        if(randomUser.username === gameUsername) {
+        if (randomUser.username === gameUsername) {
             setMyTurn(true)
         }
     }
 
     const checkClick = (e) => {
 
-        if(myTurn) {
-            console.log("HELLO", e.target)
+        if (myTurn) {
+            // console.log("HELLO", e.target)
             let shotFired = e.target.id
-      
+
             //emit fire
             socket.emit('user:fire', shotFired, room_id, gameUsername)
-      
+
             socket.on('error', (err) => {
-              console.log("err",err)
+                console.log("err", err)
             })
 
         } else {
             toggleShowToast()
             console.log("Not your turn")
         }
-        
+
     }
 
     const handleNewTurn = (message, user) => {
-        console.log("Received a new message", message)
+        // console.log("Received a new message", message)
 
         // add message to chat
         setMessages(prevMessages => [...prevMessages, message])
 
-        if(user.username === gameUsername) {
+        if (user.username === gameUsername) {
             setMyTurn(false)
         } else {
             setMyTurn(true)
         }
 
-        console.log("My turn is: ", myTurn)
+        // console.log("My turn is: ", myTurn)
     }
 
-    const handleShipList = (userShipsLeft, opponentShipsLeft) => {
-        setUserShipsLeft(userShipsLeft)
-        console.log("userShipsLeft", userShipsLeft.length)
-
-        setOpponentsShipsLeft(opponentShipsLeft)
-        console.log("opponentShipsLeft", opponentShipsLeft.length)
+    // Update ship status
+    const handleShipStatus = (playerOneRemainingShips, playerOneID, playerTwoRemainingShips, playerTwoID) => {
+        if (clientID === playerOneID) {
+            setRemainingShipsLeftside(playerOneRemainingShips)
+            setRemainingShipsRightside(playerTwoRemainingShips)
+        } else if (clientID === playerTwoID) {
+            setRemainingShipsLeftside(playerTwoRemainingShips)
+            setRemainingShipsRightside(playerOneRemainingShips)
+        }
     }
 
     const handleReadyClick = () => {
@@ -108,10 +111,10 @@ const GameRoom = () => {
             }
         },
         [gameUsername],
-      )
+    )
 
     const handleIncomingMessage = message => {
-        console.log("Received a new message", message)
+        // console.log("Received a new message", message)
 
         // add message to chat
         setMessages(prevMessages => [message, ...prevMessages])
@@ -138,7 +141,7 @@ const GameRoom = () => {
 
     const handleWinner = (winner) => {
         setWinner(winner)
-        console.log("winner is ", winner)
+        // console.log("winner is ", winner)
     }
 
     // connect to room when component is mounted
@@ -148,7 +151,7 @@ const GameRoom = () => {
             navigate('/')
             return
         }
-    
+
 
         // listen for usernames
         socket.on('users:usernames', handleIncomingUsernames)
@@ -171,7 +174,8 @@ const GameRoom = () => {
         // listen for starting player
         socket.on('user:firstTurn', handleStartingPlayer)
 
-        socket.on('ships:left', handleShipList)
+        // listen for updated ship status
+        socket.on('ships:status', handleShipStatus)
 
         socket.on('winner', handleWinner)
 
@@ -187,6 +191,7 @@ const GameRoom = () => {
             socket.off('log:fire', handleIncomingMessage)
             socket.off('user:firstTurn', handleStartingPlayer)
             socket.off('log:fire', handleNewTurn)
+            socket.off('ships:status', handleShipStatus)
         }
 
     }, [socket, gameUsername, navigate, handleIncomingUsernames])
@@ -208,7 +213,7 @@ const GameRoom = () => {
                         <GameBoard
                             owner="user"
                             title={gameUsername}
-                            shipsleft={userShipsLeft.length}
+                            shipsleft={remainingShipsLeftside.length}
                         />
                     </div>
                 </div>
@@ -271,7 +276,7 @@ const GameRoom = () => {
                             owner="opponent"
                             title={opponent}
                             check={checkClick}
-                            shipsleft={opponentsLeft.length}
+                            shipsleft={remainingShipsRightside.length}
                         />
                         <p className="text-center">Ships left: <span id="opponents-ships"></span></p>
                     </div>

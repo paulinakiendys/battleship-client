@@ -7,7 +7,7 @@ import WaitingBoat from "../assets/images/boat-wave.gif"
 const Login = () => {
 	const [username, setUsername] = useState('')
 	const [disabled, setDisabled] = useState(false)
-	const { setGameUsername, socket } = useGameContext()
+	const { setGameUsername, setClientID, socket } = useGameContext()
 	const navigate = useNavigate()
 	const [waitingScreen, setWaitingScreen] = useState(false)
 
@@ -21,6 +21,8 @@ const Login = () => {
 
 		// set game username
 		setGameUsername(username)
+
+		setClientID(socket.id)
 
 		// Empty input field
 		setUsername('')

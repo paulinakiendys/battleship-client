@@ -12,7 +12,7 @@ export default function EnemyBoard({ owner, title, check , shipsleft}) {
     "cols": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]
   }
 
-  console.log("ROOM ID:", room_id)
+  // console.log("ROOM ID:", room_id)
 
   // Send ID of the cell the user clicked on to fire
 
