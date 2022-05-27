@@ -42,15 +42,6 @@ export default function GameBoard(props) {
     //  } 
       
     // })
-
-
-    // Man ska inte kunna clicka på sin spelplan, endast motståndaren
-   /*  const testCode = (e) => {
-        console.log("Testing: ", e.target.id)
-        console.log(e.target)
-        e.target.innerHTML = ""
-        e.target.classList.add("strike")
-    } */
    
     return (
       <table ref={ref} id="userTable" className={props.owner}>
@@ -58,9 +49,8 @@ export default function GameBoard(props) {
             <tbody>
             {board.rows.map(row => (
               <tr key={row}>
-
                 {board.rows.map(col => (
-                  <td className={props.owner} /* onClick={testCode} */ id={board.rows[row] + board.cols[col]} key={board.rows[row] + board.cols[col]}>{board.rows[row] + board.cols[col]}</td>
+                  <td className={props.owner}id={board.rows[row] + board.cols[col]} key={board.rows[row] + board.cols[col]}>{board.rows[row] + board.cols[col]}</td>
                 ))}
               </tr>
             ))}

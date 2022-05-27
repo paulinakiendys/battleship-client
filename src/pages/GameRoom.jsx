@@ -15,9 +15,10 @@ const GameRoom = () => {
     const { gameUsername, socket } = useGameContext()
     const navigate = useNavigate()
     const [hideButtons, setHideButtons] = useState(false)
-    const [shipList, setShipList] = useState()
 
-    let userShips = []
+    let [userShipsLeft,setUserShipLeft] = useState([])
+    let [opponentShipsLeft, setOpponentShipLeft] = useState([])
+
 
     const handleRandomizeClick = () => {
         console.log("You clicked me!")
@@ -39,10 +40,16 @@ const GameRoom = () => {
         
     }
 
+    const handleShipList = (userShipsLeft, opponentShipsLeft) => {
+        setUserShipLeft(userShipsLeft)
+        console.log("userShipsLeft", userShipsLeft.length)
+        setOpponentShipLeft(opponentShipsLeft)
+        console.log("opponentShipsLeft", opponentShipsLeft.length)
+    }
+
     const handleReadyClick = () => {
 
-        userShips = generateUserShips()
-        setShipList(userShips.length)
+        let userShips = generateUserShips()
 
         // hide buttons
         setHideButtons(true)
@@ -98,6 +105,7 @@ const GameRoom = () => {
         setMessage('')
     }
 
+
     // connect to room when component is mounted
     useEffect(() => {
         // if no username, redirect them to the login page
@@ -105,6 +113,8 @@ const GameRoom = () => {
             navigate('/')
             return
         }
+
+        setOpponentShipLeft(opponentShipsLeft)
 
         // listen for usernames
         socket.on('users:usernames', handleIncomingUsernames)
@@ -123,7 +133,9 @@ const GameRoom = () => {
 
         socket.on('log:startingPlayer', handleIncomingMessage)
 
-        //socket.on('ships:left', handleShipList)
+        socket.on('ships:left', handleShipList)
+
+        socket.on('game:results', handleIncomingMessage)
 
         return () => {
             console.log("Running cleanup")
@@ -146,7 +158,7 @@ const GameRoom = () => {
                         <GameBoard
                             owner="user"
                             title={gameUsername}
-                            shipsleft={shipList}
+                            shipsleft={userShipsLeft.length}
                         />
                     </div>
                 </div>
@@ -209,6 +221,7 @@ const GameRoom = () => {
                             owner="opponent"
                             title={opponent}
                             check={checkClick}
+                            shipsLeft={opponentShipsLeft.length}
                         />
                         <p className="text-center">Ships left: <span id="opponents-ships"></span></p>
                     </div>

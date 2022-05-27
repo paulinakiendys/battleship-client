@@ -18,8 +18,8 @@ export default function EnemyBoard(props) {
   
    
     return (
-      <table id="enemyTable">
-        <caption className="table-title">{props.title}</caption>
+      <table id="enemyTable" className={props.owner}>
+       <caption className="table-title">{props.title} <span className="ships-left"> ships left: {props.shipsleft}</span></caption>
             <tbody>
             {board.rows.map(row => (
               <tr key={row}>
