@@ -278,7 +278,6 @@ const GameRoom = () => {
                             check={checkClick}
                             shipsleft={remainingShipsRightside.length}
                         />
-                        <p className="text-center">Ships left: <span id="opponents-ships"></span></p>
                     </div>
                 </div>
             </div>
