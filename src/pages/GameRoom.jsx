@@ -72,7 +72,7 @@ const GameRoom = () => {
 
     const handleReadyClick = () => {
 
-        userShips = generateUserShips()
+        let userShips = generateUserShips()
         setShipList(userShips.length)
 
         // hide buttons
