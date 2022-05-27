@@ -8,10 +8,30 @@
     font-family: 'Quicksand';
 }
 
+html,
+body,
+#root,
+#App {
+    height: 100vh;
+}
+
+#login {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 200px);
+}
+
+#chat-wrapper {
+    width: 200px;
+    height: 400px;
+}
+
 #chat-log {
     border: 1px solid grey;
     height: 300px;
-    width: 300px;
+    width: 200px;
     overflow-y: scroll;
 }
 
