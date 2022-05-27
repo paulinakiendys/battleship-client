@@ -28,7 +28,7 @@ const GameRoom = () => {
     }
 
     const handleStartingPlayer = (randomUser) => {
-        if(randomUser.username == gameUsername) {
+        if(randomUser.username === gameUsername) {
             setMyTurn(true)
         }
     }
@@ -59,7 +59,7 @@ const GameRoom = () => {
         // add message to chat
         setMessages(prevMessages => [...prevMessages, message])
 
-        if(user.username == gameUsername) {
+        if(user.username === gameUsername) {
             setMyTurn(false)
         } else {
             setMyTurn(true)
@@ -169,6 +169,8 @@ const GameRoom = () => {
             socket.off('log:instructions', handleIncomingMessage)
             socket.off('log:startingPlayer', handleIncomingMessage)
             socket.off('log:fire', handleIncomingMessage)
+            socket.off('user:firstTurn', handleStartingPlayer)
+            socket.off('log:fire', handleNewTurn)
         }
 
     }, [socket, gameUsername, navigate, handleIncomingUsernames])
