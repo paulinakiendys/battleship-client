@@ -61,16 +61,36 @@ const GameRoom = () => {
             if (username === gameUsername) {
                 const square = e.target
                 /**
-                 * @todo style opponent square that has been hit
+                 * @todo style right board
                  */
                 square.innerText = 'hit'
             } else {
                 const userTable = document.getElementById("userTable")
                 const square = userTable.querySelector(`#${shotFired}`)
                 /**
-                 * @todo style user square that has been hit
+                 * @todo style left board
                  */
                 square.innerText = 'HIT'
+            }
+        })
+
+        // Listen for 'miss' event to add styling
+        socket.on('miss', (username, shotFired) => {
+
+            // Style boards differently depending on player
+            if (username === gameUsername) {
+                const square = e.target
+                /**
+                 * @todo style right board
+                 */
+                square.innerText = 'miss'
+            } else {
+                const userTable = document.getElementById("userTable")
+                const square = userTable.querySelector(`#${shotFired}`)
+                /**
+                 * @todo style left board
+                 */
+                square.innerText = 'MISS'
             }
         })
     }
