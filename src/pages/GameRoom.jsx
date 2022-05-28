@@ -2,7 +2,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useGameContext } from '../contexts/GameContextProvider'
 import GameBoard from '../components/GameBoard'
 import EnemyBoard from '../components/EnemyBoard'
-import { useEffect, useState, useCallback, useRef } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { Button, Form, InputGroup, ListGroup, Toast, ToastContainer } from 'react-bootstrap'
 import { generateUserShips } from '../assets/js/randomize_flotilla'
 
@@ -59,16 +59,17 @@ const GameRoom = () => {
 
             // Style boards differently depending on player
             if (username === gameUsername) {
-                const square = e.target
+                const enemyTable = document.getElementById("enemyTable")
+                const square = enemyTable.querySelector(`#${shotFired}`)
                 /**
-                 * @todo style right board
+                 * @todo style opponent board
                  */
                 square.innerText = 'hit'
             } else {
                 const userTable = document.getElementById("userTable")
                 const square = userTable.querySelector(`#${shotFired}`)
                 /**
-                 * @todo style left board
+                 * @todo style user board
                  */
                 square.innerText = 'HIT'
             }
@@ -79,16 +80,17 @@ const GameRoom = () => {
 
             // Style boards differently depending on player
             if (username === gameUsername) {
-                const square = e.target
+                const enemyTable = document.getElementById("enemyTable")
+                const square = enemyTable.querySelector(`#${shotFired}`)
                 /**
-                 * @todo style right board
+                 * @todo style opponent board
                  */
                 square.innerText = 'miss'
             } else {
                 const userTable = document.getElementById("userTable")
                 const square = userTable.querySelector(`#${shotFired}`)
                 /**
-                 * @todo style left board
+                 * @todo style user board
                  */
                 square.innerText = 'MISS'
             }
