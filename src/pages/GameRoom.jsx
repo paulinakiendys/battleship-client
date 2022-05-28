@@ -2,7 +2,6 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useGameContext } from '../contexts/GameContextProvider'
 import GameBoard from '../components/GameBoard'
 import EnemyBoard from '../components/EnemyBoard'
-import ActivityLog from '../components/ActivityLog'
 import { useEffect, useState, useCallback } from 'react'
 import { Button, Form, InputGroup, ListGroup, Toast, ToastContainer } from 'react-bootstrap'
 import { generateUserShips } from '../assets/js/randomize_flotilla'
@@ -16,6 +15,7 @@ const GameRoom = () => {
     const navigate = useNavigate()
     const [hideButtons, setHideButtons] = useState(false)
     const [myTurn, setMyTurn] = useState(false)
+    const [turnMessage, setShowTurnMessage] = useState(false)
     const [showToast, setShowToast] = useState(false);
     const toggleShowToast = () => setShowToast(!showToast);
     const [remainingShipsLeftside, setRemainingShipsLeftside] = useState([1, 2, 3, 4]);
@@ -30,6 +30,7 @@ const GameRoom = () => {
     // }
 
     const handleStartingPlayer = (randomUser) => {
+        setShowTurnMessage(true)
         if (randomUser.username === gameUsername) {
             setMyTurn(true)
         }
@@ -169,9 +170,6 @@ const GameRoom = () => {
         socket.on('chat:incoming', handleIncomingMessage)
 
         // listen for starting player
-        socket.on('log:startingPlayer', handleIncomingMessage)
-
-        // listen for starting player
         socket.on('user:firstTurn', handleStartingPlayer)
 
         // listen for updated ship status
@@ -187,7 +185,6 @@ const GameRoom = () => {
             socket.off('user:disconnected', handleIncomingMessage)
             socket.off('chat:incoming', handleIncomingMessage)
             socket.off('log:instructions', handleIncomingMessage)
-            socket.off('log:startingPlayer', handleIncomingMessage)
             socket.off('log:fire', handleIncomingMessage)
             socket.off('user:firstTurn', handleStartingPlayer)
             socket.off('log:fire', handleNewTurn)
@@ -280,6 +277,14 @@ const GameRoom = () => {
                         />
                     </div>
                 </div>
+                {turnMessage &&
+                    <>
+                        {myTurn
+                            ? <h1 className='text-center'>Your turn</h1>
+                            : <h1 className='text-center'>Opponent's turn</h1>
+                        }
+                    </>
+                }
             </div>
         </>
     )
