@@ -2,7 +2,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useGameContext } from '../contexts/GameContextProvider'
 import GameBoard from '../components/GameBoard'
 import EnemyBoard from '../components/EnemyBoard'
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useRef } from 'react'
 import { Button, Form, InputGroup, ListGroup, Toast, ToastContainer } from 'react-bootstrap'
 import { generateUserShips } from '../assets/js/randomize_flotilla'
 
@@ -54,6 +54,25 @@ const GameRoom = () => {
             console.log("Not your turn")
         }
 
+        // Listen for 'hit' event to add styling
+        socket.on('hit', (username, shotFired) => {
+
+            // Style boards differently depending on player
+            if (username === gameUsername) {
+                const square = e.target
+                /**
+                 * @todo style opponent square that has been hit
+                 */
+                square.innerText = 'hit'
+            } else {
+                const userTable = document.getElementById("userTable")
+                const square = userTable.querySelector(`#${shotFired}`)
+                /**
+                 * @todo style user square that has been hit
+                 */
+                square.innerText = 'HIT'
+            }
+        })
     }
 
     const handleNewTurn = (message, user) => {
