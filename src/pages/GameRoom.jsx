@@ -1,4 +1,4 @@
-import { useNavigate, useParams, Link } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useGameContext } from '../contexts/GameContextProvider'
 import GameBoard from '../components/GameBoard'
 import EnemyBoard from '../components/EnemyBoard'
@@ -21,7 +21,6 @@ const GameRoom = () => {
     const [remainingShipsLeftside, setRemainingShipsLeftside] = useState([1, 2, 3, 4]);
     const [remainingShipsRightside, setRemainingShipsRightside] = useState([1, 2, 3, 4]);
     const [winner, setWinner] = useState(null);
-    const [winnerScreen, setWinnerScreen] = useState(false)
 
     // const handleRandomizeClick = () => {
     //     console.log("You clicked me!")
@@ -55,47 +54,6 @@ const GameRoom = () => {
             console.log("Not your turn")
         }
 
-        // Listen for 'hit' event to add styling
-        socket.on('hit', (username, shotFired) => {
-
-            // Style boards differently depending on player
-            if (username === gameUsername) {
-                const enemyTable = document.getElementById("enemyTable")
-                const square = enemyTable.querySelector(`#${shotFired}`)
-                /**
-                 * @todo style opponent board
-                 */
-                square.innerText = 'hit'
-            } else {
-                const userTable = document.getElementById("userTable")
-                const square = userTable.querySelector(`#${shotFired}`)
-                /**
-                 * @todo style user board
-                 */
-                square.innerText = 'HIT'
-            }
-        })
-
-        // Listen for 'miss' event to add styling
-        socket.on('miss', (username, shotFired) => {
-
-            // Style boards differently depending on player
-            if (username === gameUsername) {
-                const enemyTable = document.getElementById("enemyTable")
-                const square = enemyTable.querySelector(`#${shotFired}`)
-                /**
-                 * @todo style opponent board
-                 */
-                square.innerText = 'miss'
-            } else {
-                const userTable = document.getElementById("userTable")
-                const square = userTable.querySelector(`#${shotFired}`)
-                /**
-                 * @todo style user board
-                 */
-                square.innerText = 'MISS'
-            }
-        })
     }
 
     const handleNewTurn = (message, user) => {
@@ -185,7 +143,6 @@ const GameRoom = () => {
     const handleWinner = (winner) => {
         setWinner(winner)
         // console.log("winner is ", winner)
-        setWinnerScreen(true)
     }
 
     // connect to room when component is mounted
@@ -246,97 +203,89 @@ const GameRoom = () => {
                     <Toast.Body>Stay calm, it's not your turn yet 🛳</Toast.Body>
                 </Toast>
             </ToastContainer>
-            {!winnerScreen && (
-                <div className="row d-flex align-items-center">
-                    <div className="col-md-5">
-                        <div id="user-gameboard">
-                            <GameBoard
-                                owner="user"
-                                title={gameUsername}
-                                shipsleft={remainingShipsLeftside.length}
-                            />
-                        </div>
-                    </div>
 
-                    <div className="col-md-2 d-flex justify-content-center">
-                        {/* <ActivityLog /> */}
-                        {/* @todo: make ChatLog a component */}
-                        <div id="chat-wrapper">
-                            <div id="chat-log">
-                                {/* Here is log/chat */}
-                                <ListGroup id="messages">
-                                    {messages.map((message, index) => {
-                                        const ts = new Date(message.timestamp)
-                                        const time = ts.toLocaleTimeString()
-                                        return (
-                                            <ListGroup.Item key={index} className="message">
-                                                <span className="time">{time} </span>
-                                                <span className="user">{message.username} </span>
-                                                <span className="content">{message.content}</span>
-                                            </ListGroup.Item>
-                                        )
-                                    }
-                                    )}
-                                </ListGroup>
-                            </div>
-                            <Form onSubmit={handleSubmit}>
-                                <InputGroup>
-                                    <Form.Control
-                                        type='text'
-                                        placeholder='Send message'
-                                        value={message}
-                                        onChange={e => setMessage(e.target.value)}
-                                        required
-                                    />
-                                    <Button type='submit' disabled={!message.length}>Send</Button>
-                                </InputGroup>
-                            </Form>
-                            {!hideButtons && (
-                                <div id="buttons-wrapper" className='py-3'>
-                                    {/* <Button
+            <div className="row d-flex align-items-center">
+                <div className="col-md-5">
+                    <div id="user-gameboard">
+                        <GameBoard
+                            owner="user"
+                            title={gameUsername}
+                            shipsleft={remainingShipsLeftside.length}
+                        />
+                    </div>
+                </div>
+
+                <div className="col-md-2 d-flex justify-content-center">
+                    {/* <ActivityLog /> */}
+                    {/* @todo: make ChatLog a component */}
+                    <div id="chat-wrapper">
+                        <div id="chat-log">
+                            {/* Here is log/chat */}
+                            <ListGroup id="messages">
+                                {messages.map((message, index) => {
+                                    const ts = new Date(message.timestamp)
+                                    const time = ts.toLocaleTimeString()
+                                    return (
+                                        <ListGroup.Item key={index} className="message">
+                                            <span className="time">{time} </span>
+                                            <span className="user">{message.username} </span>
+                                            <span className="content">{message.content}</span>
+                                        </ListGroup.Item>
+                                    )
+                                }
+                                )}
+                            </ListGroup>
+                        </div>
+                        <Form onSubmit={handleSubmit}>
+                            <InputGroup>
+                                <Form.Control
+                                    type='text'
+                                    placeholder='Send message'
+                                    value={message}
+                                    onChange={e => setMessage(e.target.value)}
+                                    required
+                                />
+                                <Button type='submit' disabled={!message.length}>Send</Button>
+                            </InputGroup>
+                        </Form>
+                        {!hideButtons && (
+                            <div id="buttons-wrapper" className='py-3'>
+                                {/* <Button
                                     variant='warning'
                                     onClick={handleRandomizeClick}
                                 >
                                     Randomize
                                 </Button> */}
-                                    <Button
-                                        variant='success'
-                                        onClick={handleReadyClick}
-                                    >
-                                        Ready
-                                    </Button>
-                                </div>
-                            )}
-                        </div>
+                                <Button
+                                    variant='success'
+                                    onClick={handleReadyClick}
+                                >
+                                    Ready
+                                </Button>
+                            </div>
+                        )}
                     </div>
+                </div>
 
-                    <div className="col-md-5">
-                        <div id="opponent-gameboard">
-                            <EnemyBoard
-                                owner="opponent"
-                                title={opponent}
-                                check={checkClick}
-                                shipsleft={remainingShipsRightside.length}
-                            />
-                        </div>
+                <div className="col-md-5">
+                    <div id="opponent-gameboard">
+                        <EnemyBoard
+                            owner="opponent"
+                            title={opponent}
+                            check={checkClick}
+                            shipsleft={remainingShipsRightside.length}
+                        />
                     </div>
-                    {turnMessage &&
-                        <>
-                            {myTurn
-                                ? <h1 className='text-center'>Your turn</h1>
-                                : <h1 className='text-center'>Opponent's turn</h1>
-                            }
-                        </>
-                    }
                 </div>
-            )}
-            {winnerScreen && (
-                <div className="vh-100 d-flex justify-content-center flex-column align-items-center">
-                    {/* @todo Add styling to winner screen */}
-                    <h1>The winner is {winner}</h1>
-                    <Button as={Link} to="/">Play Again</Button>
-                </div>
-            )}
+                {turnMessage &&
+                    <>
+                        {myTurn
+                            ? <h1 className='text-center'>Your turn</h1>
+                            : <h1 className='text-center'>Opponent's turn</h1>
+                        }
+                    </>
+                }
+            </div>
         </>
     )
 }
