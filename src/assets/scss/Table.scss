@@ -28,6 +28,7 @@ table {
   }
   
   td.opponent {
+    cursor: pointer;
     background-color: #0f4355;
     &:hover{
       background-color: #032530;
