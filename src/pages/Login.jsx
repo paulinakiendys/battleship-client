@@ -95,7 +95,7 @@ const Login = () => {
 								variant="primary"
 								type="submit"
 								disabled={!username}>
-								Play
+								Join
 							</Button>
 						</Form>
 					</>

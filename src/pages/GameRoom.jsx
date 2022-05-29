@@ -2,7 +2,7 @@ import { useNavigate, useParams, Link } from 'react-router-dom'
 import { useGameContext } from '../contexts/GameContextProvider'
 import GameBoard from '../components/GameBoard'
 import EnemyBoard from '../components/EnemyBoard'
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useRef } from 'react'
 import { Button, Form, InputGroup, ListGroup, Toast, ToastContainer } from 'react-bootstrap'
 import { generateUserShips } from '../assets/js/randomize_flotilla'
 
@@ -23,12 +23,19 @@ const GameRoom = () => {
     const [winner, setWinner] = useState(null);
     const [winnerScreen, setWinnerScreen] = useState(false)
 
-    // const handleRandomizeClick = () => {
-    //     console.log("You clicked me!")
-    //     /**
-    //      * @todo Tirapat: call function to randomly place ships
-    //      */
-    // }
+    const tableRef = useRef()
+
+    const board = {
+        "rows": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+        "cols": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]
+    }
+
+    const handleRandomizeClick = () => {
+        console.log("You clicked me!")
+        /**
+         * @todo Tirapat: call function to randomly place ships
+         */
+    }
 
     const handleStartingPlayer = (randomUser) => {
         setShowTurnMessage(true)
@@ -86,6 +93,22 @@ const GameRoom = () => {
     const handleReadyClick = () => {
 
         let userShips = generateUserShips()
+
+        const table = tableRef.current
+        if (table.classList.contains("user")) {
+
+            userShips.forEach((ship, index) => {
+                for (const row of table.rows) {
+                    for (const cell of row.cells) {
+
+                        if (ship.position.includes(cell.id)) {
+                            // console.log("Boat")
+                            cell.style.backgroundColor = ship.color
+                        }
+                    }
+                }
+            })
+        }
 
         // hide buttons
         setHideButtons(true)
@@ -213,11 +236,42 @@ const GameRoom = () => {
                 <div className="row d-flex align-items-center">
                     <div className="col-md-5">
                         <div id="user-gameboard">
-                            <GameBoard
+                        {/* <GameBoard
                                 owner="user"
                                 title={gameUsername}
                                 shipsleft={remainingShipsLeftside.length}
-                            />
+                            /> */}
+                            <table ref={tableRef} id="userTable" className="user">
+                                <caption className="table-title">{gameUsername} <span className="ships-left"> ships left: {remainingShipsLeftside.length}</span></caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        {board.cols.map((letter, index) => (
+                                            <th
+                                                key={index}
+                                                scope="col">
+                                                {letter}
+                                            </th>
+                                        ))}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {board.rows.map((number, index) => (
+                                        <tr key={index}>
+                                            <th scope="row">{number}</th>
+                                            {board.cols.map((letter, index) => (
+                                                <td
+                                                    key={index}
+                                                    id={letter + number}
+                                                    className="user"
+                                                >
+                                                    {/* {letter + number} */}
+                                                </td>
+                                            ))}
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
                         </div>
                     </div>
 
@@ -266,7 +320,7 @@ const GameRoom = () => {
                                         variant='success'
                                         onClick={handleReadyClick}
                                     >
-                                        Ready
+                                        Generate ships
                                     </Button>
                                 </div>
                             )}
