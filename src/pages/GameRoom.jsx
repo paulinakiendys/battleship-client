@@ -23,18 +23,49 @@ const GameRoom = () => {
     const [winner, setWinner] = useState(null);
     const [winnerScreen, setWinnerScreen] = useState(false)
 
-    const tableRef = useRef()
+    const userTableRef = useRef()
+    const opponentTableRef = useRef()
 
     const board = {
         "rows": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
         "cols": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]
     }
 
-    const handleRandomizeClick = () => {
-        console.log("You clicked me!")
-        /**
-         * @todo Tirapat: call function to randomly place ships
-         */
+    /**
+     * Function to style boards if it was a 'hit' or a 'miss'
+     * 
+     * @param {boolean} hit true if we have a 'hit', false if we have a 'miss'
+     * @param {string} username username of client emitting event
+     * @param {string} square id of cell that was clicked on
+     */
+    const handleIncomingFire = (hit, username, square) => {
+
+        // check who emitted event
+        if (gameUsername === username) {
+            // if 'user', get opponent's table
+            const opponentTable = opponentTableRef.current
+            // get cell that was clicked on
+            const cell = opponentTable.querySelector(`#${square}`)
+
+            // check if it was a 'hit' or a 'miss'
+            if (hit) {
+                cell.innerText = 'hit'
+            } else {
+                cell.innerText = 'miss'
+            }
+        } else if (gameUsername !== username) {
+            // if 'opponent', get user's table
+            const userTable = userTableRef.current
+            // get cell that was clicked on
+            const cell = userTable.querySelector(`#${square}`)
+
+            // check if it was a 'hit' or a 'miss'
+            if (hit) {
+                cell.innerText = 'HIT'
+            } else {
+                cell.innerText = 'MISS'
+            }
+        }
     }
 
     const handleStartingPlayer = (randomUser) => {
@@ -94,7 +125,7 @@ const GameRoom = () => {
 
         let userShips = generateUserShips()
 
-        const table = tableRef.current
+        const table = userTableRef.current
         if (table.classList.contains("user")) {
 
             userShips.forEach((ship, index) => {
@@ -205,6 +236,9 @@ const GameRoom = () => {
 
         socket.on('winner', handleWinner)
 
+        // listen for incoming fire event
+        socket.on('fire:incoming', handleIncomingFire)
+
         return () => {
             console.log("Running cleanup")
 
@@ -217,6 +251,7 @@ const GameRoom = () => {
             socket.off('user:firstTurn', handleStartingPlayer)
             socket.off('log:fire', handleNewTurn)
             socket.off('ships:status', handleShipStatus)
+            socket.off('fire:incoming', handleIncomingFire)
         }
 
     }, [socket, gameUsername, navigate, handleIncomingUsernames])
@@ -236,12 +271,12 @@ const GameRoom = () => {
                 <div className="row d-flex align-items-center">
                     <div className="col-md-5">
                         <div id="user-gameboard">
-                        {/* <GameBoard
+                            {/* <GameBoard
                                 owner="user"
                                 title={gameUsername}
                                 shipsleft={remainingShipsLeftside.length}
                             /> */}
-                            <table ref={tableRef} id="userTable" className="user">
+                            <table ref={userTableRef} id="userTable" className="user">
                                 <caption className="table-title">{gameUsername} <span className="ships-left"> ships left: {remainingShipsLeftside.length}</span></caption>
                                 <thead>
                                     <tr>
@@ -329,12 +364,44 @@ const GameRoom = () => {
 
                     <div className="col-md-5">
                         <div id="opponent-gameboard">
-                            <EnemyBoard
+                            {/* <EnemyBoard
                                 owner="opponent"
                                 title={opponent}
                                 check={checkClick}
                                 shipsleft={remainingShipsRightside.length}
-                            />
+                            /> */}
+                            <table ref={opponentTableRef} id="enemyTable">
+                                <caption className="table-title">{opponent} <span className="ships-left"> ships left: {remainingShipsRightside.length}</span></caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        {board.cols.map((letter, index) => (
+                                            <th
+                                                key={index}
+                                                scope="col">
+                                                {letter}
+                                            </th>
+                                        ))}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {board.rows.map((number, index) => (
+                                        <tr key={index}>
+                                            <th scope="row">{number}</th>
+                                            {board.cols.map((letter, index) => (
+                                                <td
+                                                    key={index}
+                                                    id={letter + number}
+                                                    className="opponent"
+                                                    onClick={checkClick}
+                                                >
+                                                    {/* {letter + number} */}
+                                                </td>
+                                            ))}
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                     {turnMessage &&
