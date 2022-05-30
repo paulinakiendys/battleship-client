@@ -197,11 +197,11 @@ const GameRoom = () => {
 
     const handleWinner = (winner) => {
         setWinner(winner)
-        // console.log("winner is ", winner)
-        /**
-         * @todo setWinnerScreen to true
-         * 
-         */
+        console.log("winner is ", winner)
+
+        if(winner) {
+            setWinnerScreen(true)
+        }
     }
 
     // connect to room when component is mounted
