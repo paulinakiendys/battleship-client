@@ -22,7 +22,7 @@ export default function EnemyBoard({ owner, title, check , shipsleft}) {
       <caption className="table-title">{title} <span className="ships-left"> ships left: {shipsleft}</span></caption>
         <thead>
           <tr>
-            <th scope="col">#</th>
+            <th scope="col" id="changeCursor">#</th>
             {board.cols.map((letter, index) => (
               <th
                 key={index}
@@ -32,7 +32,7 @@ export default function EnemyBoard({ owner, title, check , shipsleft}) {
             ))}
           </tr>
         </thead>
-        <tbody>
+        <tbody id="changeCursor">
           {board.rows.map((number, index) => (
             <tr key={index}>
               <th scope="row">{number}</th>
