@@ -6,21 +6,28 @@ table {
   
   table caption {
     font-size: 1.5em;
-    color: #171717;
+    color: #fff;
     caption-side: top;
   }
   
   td {
     width: 2rem;
     height: 2rem;
-    color: rgba(0,0,0,0.5);
+    color: rgb(255, 255, 255);
     margin: 5px;
-    border: 0.5px solid white;
-    border-radius: 5px;
+    border: 0.5px solid rgb(255, 255, 255);
+    font-size: 1.5em;
+  }
+
+
+  th {
+    color: rgb(228, 255, 255);
+    padding: 10px;
   }
   
   td.user {
-    background-color: #a1d0df;
+    //background-color: #a1d0df;
+    background-color: rgb(152, 183, 186);
     // &:hover{
     //   background-color: #032530;
     //   color: white;
@@ -28,21 +35,22 @@ table {
   }
   
   td.opponent {
+    //cursor: url('../images/cursor-aim.png');
     cursor: pointer;
-    background-color: #0f4355;
+    background-color: #3b6e7e;
     &:hover{
-      background-color: #032530;
+      background-color: #344e57;
       color: white;
     }
   }
   
-  .strike {
-    background-color: #550f0f !important;
+  .disabled {
+    pointer-events: none;
   }
 
   .ships-left {
     font-size: 0.8em;
-    color: #3f484b;
+    color: #ededed;
   }
 
   @media screen and(min-width: 768px) {

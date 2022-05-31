@@ -8,13 +8,13 @@ import Container from 'react-bootstrap/Container'
 const App = () => {
 	return (
 		<div id="App">
-			<Container>
+			
 				<Routes>
 					<Route path="/" element={<Login />} />
 					<Route path="/game/:room_id" element={<GameRoom />} />
 					<Route path="*" element={<NotFound />} />
 				</Routes>
-			</Container>
+			
 		</div>
 	)
 }

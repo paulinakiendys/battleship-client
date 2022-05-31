@@ -3,7 +3,7 @@ import { useGameContext } from '../contexts/GameContextProvider'
 import GameBoard from '../components/GameBoard'
 import EnemyBoard from '../components/EnemyBoard'
 import { useEffect, useState, useCallback, useRef } from 'react'
-import { Button, Form, InputGroup, ListGroup, Toast, ToastContainer } from 'react-bootstrap'
+import { Button, Form, InputGroup, ListGroup, Toast, ToastContainer, Container } from 'react-bootstrap'
 import { generateUserShips } from '../assets/js/randomize_flotilla'
 
 const GameRoom = () => {
@@ -17,7 +17,9 @@ const GameRoom = () => {
     const [myTurn, setMyTurn] = useState(false)
     const [turnMessage, setShowTurnMessage] = useState(false)
     const [showToast, setShowToast] = useState(false);
+    const [showDisabledToast, setShowDisabledToast] = useState(false)
     const toggleShowToast = () => setShowToast(!showToast);
+    const toggleShowDisabledToast = () => setShowDisabledToast(!showDisabledToast);
     const [remainingShipsLeftside, setRemainingShipsLeftside] = useState([1, 2, 3, 4]);
     const [remainingShipsRightside, setRemainingShipsRightside] = useState([1, 2, 3, 4]);
     const [winner, setWinner] = useState(null);
@@ -25,6 +27,8 @@ const GameRoom = () => {
 
     const userTableRef = useRef()
     const opponentTableRef = useRef()
+    // const chatLogRef = useRef()
+    // const chatLog = chatLogRef.current
 
     const board = {
         "rows": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
@@ -47,11 +51,16 @@ const GameRoom = () => {
             // get cell that was clicked on
             const cell = opponentTable.querySelector(`#${square}`)
 
+            //make the cell non-clickable
+            cell.classList.add('disabled')
+
             // check if it was a 'hit' or a 'miss'
             if (hit) {
-                cell.innerText = 'hit'
+                cell.innerText = '💥'
+                cell.style.color = 'white'
+                cell.style.backgroundColor = '#032530'
             } else {
-                cell.innerText = 'miss'
+                cell.style.backgroundColor = 'rgb(23, 32, 53)'
             }
         } else if (gameUsername !== username) {
             // if 'opponent', get user's table
@@ -61,9 +70,10 @@ const GameRoom = () => {
 
             // check if it was a 'hit' or a 'miss'
             if (hit) {
-                cell.innerText = 'HIT'
+                cell.innerText = '💥'
+                cell.style.color = 'white'
             } else {
-                cell.innerText = 'MISS'
+                cell.style.backgroundColor = 'rgb(106, 124, 145)'
             }
         }
     }
@@ -100,6 +110,8 @@ const GameRoom = () => {
 
         // add message to chat
         setMessages(prevMessages => [...prevMessages, message])
+
+        // chatLog.scrollTop = chatLog.scrollHeight;
 
         if (user.username === gameUsername) {
             setMyTurn(false)
@@ -267,15 +279,26 @@ const GameRoom = () => {
                 </Toast>
             </ToastContainer>
 
+            <ToastContainer position="top-end">
+                <Toast show={showDisabledToast} onClose={toggleShowDisabledToast} delay={2000} autohide>
+                    <Toast.Header>
+                        <strong className="me-auto">Captain!</strong>
+                    </Toast.Header>
+                    <Toast.Body>You have already tried this spot 🛳</Toast.Body>
+                </Toast>
+            </ToastContainer>
+
+            <Container fluid>
             {!winnerScreen && (
-                <div className="row d-flex align-items-center">
-                    <div className="col-md-5">
+                <div className="row d-flex align-items-center justify-content-between w-100">
+                    <div className="col-md-5 d-flex align-items-center justify-content-center">
                         <div id="user-gameboard">
                             {/* <GameBoard
                                 owner="user"
                                 title={gameUsername}
                                 shipsleft={remainingShipsLeftside.length}
                             /> */}
+                            <h1>🛳 Captain </h1>
                             <table ref={userTableRef} id="userTable" className="user">
                                 <caption className="table-title">{gameUsername} <span className="ships-left"> ships left: {remainingShipsLeftside.length}</span></caption>
                                 <thead>
@@ -310,11 +333,12 @@ const GameRoom = () => {
                         </div>
                     </div>
 
-                    <div className="col-md-2 d-flex justify-content-center">
+                    <div className="col-md-2 d-flex flex-column justify-content-center">
                         {/* <ActivityLog /> */}
                         {/* @todo: make ChatLog a component */}
                         <div id="chat-wrapper">
                             <div id="chat-log">
+                                <div id="chat-title" className="text-center p-2 position-sticky">⚓️ ACTIVITY LOG ⚓️</div>
                                 {/* Here is log/chat */}
                                 <ListGroup id="messages">
                                     {messages.map((message, index) => {
@@ -359,10 +383,26 @@ const GameRoom = () => {
                                     </Button>
                                 </div>
                             )}
+
+                            {turnMessage &&
+                                <>
+                                    {myTurn
+                                        ? <div className='text-center p-4 text-white'>
+                                                <h4>Bombs away! 💣</h4>
+                                                <p>It's your turn.</p>
+                                            </div>
+                                        : <div className='text-center p-4 text-white'>
+                                                <h4>Hold your ground! 😨</h4>
+                                                <p>It's your enemy's turn.</p>
+                                            </div>
+                                    }
+                                </>
+                            }
                         </div>
+                        
                     </div>
 
-                    <div className="col-md-5">
+                    <div className="col-md-5 d-flex align-items-center justify-content-center">
                         <div id="opponent-gameboard">
                             {/* <EnemyBoard
                                 owner="opponent"
@@ -370,6 +410,7 @@ const GameRoom = () => {
                                 check={checkClick}
                                 shipsleft={remainingShipsRightside.length}
                             /> */}
+                            <h1>🏴‍☠️ Enemy </h1>
                             <table ref={opponentTableRef} id="enemyTable">
                                 <caption className="table-title">{opponent} <span className="ships-left"> ships left: {remainingShipsRightside.length}</span></caption>
                                 <thead>
@@ -404,14 +445,7 @@ const GameRoom = () => {
                             </table>
                         </div>
                     </div>
-                    {turnMessage &&
-                        <>
-                            {myTurn
-                                ? <h1 className='text-center'>Your turn</h1>
-                                : <h1 className='text-center'>Opponent's turn</h1>
-                            }
-                        </>
-                    }
+            
                 </div>
             )}
 
@@ -422,6 +456,7 @@ const GameRoom = () => {
                     <Button as={Link} to="/">Play Again</Button>
                 </div>
             )}
+            </Container>
         </>
     )
 }
