@@ -40,38 +40,34 @@ const GameRoom = () => {
      * @param {string} username username of client emitting event
      * @param {string} square id of cell that was clicked on
      */
-    const handleIncomingFire = (hit, username, square) => {
+     const handleIncomingFire = useCallback(
+        (hit, username, square) => {
 
-        // check who emitted event
-        if (gameUsername === username) {
-            // if 'user', get opponent's table
-            const opponentTable = opponentTableRef.current
-            // get cell that was clicked on
-            const cell = opponentTable.querySelector(`#${square}`)
+            // check who emitted event
+            if (gameUsername === username) {
+                // if 'user', get opponent's table
+                const opponentTable = opponentTableRef.current
+                // get cell that was clicked on
+                const cell = opponentTable.querySelector(`#${square}`)
 
-            //make the cell non-clickable
-            cell.classList.add('disabled')
+                // check if it was a 'hit' or a 'miss'
+                if (hit) {
+                    cell.innerText = 'hit'
+                } else {
+                    cell.innerText = 'miss'
+                }
+            } else if (gameUsername !== username) {
+                // if 'opponent', get user's table
+                const userTable = userTableRef.current
+                // get cell that was clicked on
+                const cell = userTable.querySelector(`#${square}`)
 
-            // check if it was a 'hit' or a 'miss'
-            if (hit) {
-                cell.innerText = '💥'
-                cell.style.color = 'white'
-                cell.style.backgroundColor = '#032530'
-            } else {
-                cell.style.backgroundColor = 'rgb(23, 32, 53)'
-            }
-        } else if (gameUsername !== username) {
-            // if 'opponent', get user's table
-            const userTable = userTableRef.current
-            // get cell that was clicked on
-            const cell = userTable.querySelector(`#${square}`)
-
-            // check if it was a 'hit' or a 'miss'
-            if (hit) {
-                cell.innerText = '💥'
-                cell.style.color = 'white'
-            } else {
-                cell.style.backgroundColor = 'rgb(106, 124, 145)'
+                // check if it was a 'hit' or a 'miss'
+                if (hit) {
+                    cell.innerText = 'HIT'
+                } else {
+                    cell.innerText = 'MISS'
+                }
             }
         },
         [gameUsername],
