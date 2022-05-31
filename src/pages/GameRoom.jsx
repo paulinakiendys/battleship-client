@@ -52,9 +52,10 @@ const GameRoom = () => {
 
                 // check if it was a 'hit' or a 'miss'
                 if (hit) {
-                    cell.innerText = 'hit'
+                    cell.innerText = '💥'
+                    cell.style.backgroundColor = 'rgb(56, 5, 17)'
                 } else {
-                    cell.innerText = 'miss'
+                    cell.style.backgroundColor = 'rgb(16, 49, 56)'
                 }
             } else if (gameUsername !== username) {
                 // if 'opponent', get user's table
@@ -64,9 +65,9 @@ const GameRoom = () => {
 
                 // check if it was a 'hit' or a 'miss'
                 if (hit) {
-                    cell.innerText = 'HIT'
+                    cell.innerText = '💥'
                 } else {
-                    cell.innerText = 'MISS'
+                    cell.style.backgroundColor = 'rgb(19, 47, 54)'
                 }
             }
         },
