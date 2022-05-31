@@ -1,9 +1,7 @@
 import { useNavigate, useParams, Link } from 'react-router-dom'
 import { useGameContext } from '../contexts/GameContextProvider'
-import GameBoard from '../components/GameBoard'
-import EnemyBoard from '../components/EnemyBoard'
 import { useEffect, useState, useCallback, useRef } from 'react'
-import { Button, Form, InputGroup, ListGroup, Toast, ToastContainer } from 'react-bootstrap'
+import { Button, Form, InputGroup, ListGroup, Toast, ToastContainer, Container } from 'react-bootstrap'
 import { generateUserShips } from '../assets/js/randomize_flotilla'
 
 const GameRoom = () => {
@@ -17,7 +15,9 @@ const GameRoom = () => {
     const [myTurn, setMyTurn] = useState(false)
     const [turnMessage, setShowTurnMessage] = useState(false)
     const [showToast, setShowToast] = useState(false);
+    const [showDisabledToast, setShowDisabledToast] = useState(false)
     const toggleShowToast = () => setShowToast(!showToast);
+    const toggleShowDisabledToast = () => setShowDisabledToast(!showDisabledToast);
     const [remainingShipsLeftside, setRemainingShipsLeftside] = useState([1, 2, 3, 4]);
     const [remainingShipsRightside, setRemainingShipsRightside] = useState([1, 2, 3, 4]);
     const [winner, setWinner] = useState(null);
@@ -25,6 +25,8 @@ const GameRoom = () => {
 
     const userTableRef = useRef()
     const opponentTableRef = useRef()
+    // const chatLogRef = useRef()
+    // const chatLog = chatLogRef.current
 
     const board = {
         "rows": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
@@ -38,42 +40,49 @@ const GameRoom = () => {
      * @param {string} username username of client emitting event
      * @param {string} square id of cell that was clicked on
      */
-    const handleIncomingFire = (hit, username, square) => {
+     const handleIncomingFire = useCallback(
+        (hit, username, square) => {
 
-        // check who emitted event
-        if (gameUsername === username) {
-            // if 'user', get opponent's table
-            const opponentTable = opponentTableRef.current
-            // get cell that was clicked on
-            const cell = opponentTable.querySelector(`#${square}`)
+            // check who emitted event
+            if (gameUsername === username) {
+                // if 'user', get opponent's table
+                const opponentTable = opponentTableRef.current
+                // get cell that was clicked on
+                const cell = opponentTable.querySelector(`#${square}`)
 
-            // check if it was a 'hit' or a 'miss'
-            if (hit) {
-                cell.innerText = 'hit'
-            } else {
-                cell.innerText = 'miss'
+                // check if it was a 'hit' or a 'miss'
+                if (hit) {
+                    cell.innerText = '💥'
+                    cell.style.backgroundColor = 'rgb(56, 5, 17)'
+                } else {
+                    cell.style.backgroundColor = 'rgb(16, 49, 56)'
+                }
+            } else if (gameUsername !== username) {
+                // if 'opponent', get user's table
+                const userTable = userTableRef.current
+                // get cell that was clicked on
+                const cell = userTable.querySelector(`#${square}`)
+
+                // check if it was a 'hit' or a 'miss'
+                if (hit) {
+                    cell.innerText = '💥'
+                } else {
+                    cell.style.backgroundColor = 'rgb(19, 47, 54)'
+                }
             }
-        } else if (gameUsername !== username) {
-            // if 'opponent', get user's table
-            const userTable = userTableRef.current
-            // get cell that was clicked on
-            const cell = userTable.querySelector(`#${square}`)
+        },
+        [gameUsername],
+    )
 
-            // check if it was a 'hit' or a 'miss'
-            if (hit) {
-                cell.innerText = 'HIT'
-            } else {
-                cell.innerText = 'MISS'
+    const handleStartingPlayer = useCallback(
+        (randomUser) => {
+            setShowTurnMessage(true)
+            if (randomUser.username === gameUsername) {
+                setMyTurn(true)
             }
-        }
-    }
-
-    const handleStartingPlayer = (randomUser) => {
-        setShowTurnMessage(true)
-        if (randomUser.username === gameUsername) {
-            setMyTurn(true)
-        }
-    }
+        },
+        [gameUsername],
+    )
 
     const checkClick = (e) => {
 
@@ -95,31 +104,32 @@ const GameRoom = () => {
 
     }
 
-    const handleNewTurn = (message, user) => {
-        // console.log("Received a new message", message)
+    const handleNewTurn = useCallback(
+        (message, user) => {
+            // add message to chat
+            setMessages(prevMessages => [...prevMessages, message])
 
-        // add message to chat
-        setMessages(prevMessages => [...prevMessages, message])
-
-        if (user.username === gameUsername) {
-            setMyTurn(false)
-        } else {
-            setMyTurn(true)
-        }
-
-        // console.log("My turn is: ", myTurn)
-    }
+            if (user.username === gameUsername) {
+                setMyTurn(false)
+            } else {
+                setMyTurn(true)
+            }
+        }, [gameUsername]
+    )
 
     // Update ship status
-    const handleShipStatus = (playerOneRemainingShips, playerOneID, playerTwoRemainingShips, playerTwoID) => {
-        if (clientID === playerOneID) {
-            setRemainingShipsLeftside(playerOneRemainingShips)
-            setRemainingShipsRightside(playerTwoRemainingShips)
-        } else if (clientID === playerTwoID) {
-            setRemainingShipsLeftside(playerTwoRemainingShips)
-            setRemainingShipsRightside(playerOneRemainingShips)
-        }
-    }
+    const handleShipStatus = useCallback(
+        (playerOneRemainingShips, playerOneID, playerTwoRemainingShips, playerTwoID) => {
+            if (clientID === playerOneID) {
+                setRemainingShipsLeftside(playerOneRemainingShips)
+                setRemainingShipsRightside(playerTwoRemainingShips)
+            } else if (clientID === playerTwoID) {
+                setRemainingShipsLeftside(playerTwoRemainingShips)
+                setRemainingShipsRightside(playerOneRemainingShips)
+            }
+        },
+        [clientID],
+    )
 
     const handleReadyClick = () => {
 
@@ -179,7 +189,7 @@ const GameRoom = () => {
         // console.log("Received a new message", message)
 
         // add message to chat
-        setMessages(prevMessages => [message, ...prevMessages])
+        setMessages(prevMessages => [...prevMessages, message])
     }
 
     const handleSubmit = e => {
@@ -205,7 +215,7 @@ const GameRoom = () => {
         setWinner(winner)
         console.log("winner is ", winner)
 
-        if(winner) {
+        if (winner) {
             setWinnerScreen(true)
         }
     }
@@ -260,7 +270,7 @@ const GameRoom = () => {
             socket.off('fire:incoming', handleIncomingFire)
         }
 
-    }, [socket, gameUsername, navigate, handleIncomingUsernames])
+    }, [socket, gameUsername, navigate, handleIncomingUsernames, handleIncomingFire, handleNewTurn, handleShipStatus, handleStartingPlayer])
 
     return (
         <>
@@ -273,15 +283,26 @@ const GameRoom = () => {
                 </Toast>
             </ToastContainer>
 
+            <ToastContainer position="top-end">
+                <Toast show={showDisabledToast} onClose={toggleShowDisabledToast} delay={2000} autohide>
+                    <Toast.Header>
+                        <strong className="me-auto">Captain!</strong>
+                    </Toast.Header>
+                    <Toast.Body>You have already tried this spot 🛳</Toast.Body>
+                </Toast>
+            </ToastContainer>
+
+            <Container fluid>
             {!winnerScreen && (
-                <div className="row d-flex align-items-center">
-                    <div className="col-md-5">
+                <div className="row d-flex align-items-center justify-content-between w-100">
+                    <div className="col-md-5 d-flex align-items-center justify-content-center">
                         <div id="user-gameboard">
                             {/* <GameBoard
                                 owner="user"
                                 title={gameUsername}
                                 shipsleft={remainingShipsLeftside.length}
                             /> */}
+                            <h1>🛳 Captain </h1>
                             <table ref={userTableRef} id="userTable" className="user">
                                 <caption className="table-title">{gameUsername} <span className="ships-left"> ships left: {remainingShipsLeftside.length}</span></caption>
                                 <thead>
@@ -316,11 +337,12 @@ const GameRoom = () => {
                         </div>
                     </div>
 
-                    <div className="col-md-2 d-flex justify-content-center">
+                    <div className="col-md-2 d-flex flex-column justify-content-center">
                         {/* <ActivityLog /> */}
                         {/* @todo: make ChatLog a component */}
                         <div id="chat-wrapper">
                             <div id="chat-log">
+                                <div id="chat-title" className="text-center p-2 position-sticky">⚓️ ACTIVITY LOG ⚓️</div>
                                 {/* Here is log/chat */}
                                 <ListGroup id="messages">
                                     {messages.map((message, index) => {
@@ -365,10 +387,26 @@ const GameRoom = () => {
                                     </Button>
                                 </div>
                             )}
+
+                            {turnMessage &&
+                                <>
+                                    {myTurn
+                                        ? <div className='text-center p-4 text-white'>
+                                                <h4>Bombs away! 💣</h4>
+                                                <p>It's your turn.</p>
+                                            </div>
+                                        : <div className='text-center p-4 text-white'>
+                                                <h4>Hold your ground! 😨</h4>
+                                                <p>It's your enemy's turn.</p>
+                                            </div>
+                                    }
+                                </>
+                            }
                         </div>
+                        
                     </div>
 
-                    <div className="col-md-5">
+                    <div className="col-md-5 d-flex align-items-center justify-content-center">
                         <div id="opponent-gameboard">
                             {/* <EnemyBoard
                                 owner="opponent"
@@ -376,6 +414,7 @@ const GameRoom = () => {
                                 check={checkClick}
                                 shipsleft={remainingShipsRightside.length}
                             /> */}
+                            <h1>🏴‍☠️ Enemy </h1>
                             <table ref={opponentTableRef} id="enemyTable">
                                 <caption className="table-title">{opponent} <span className="ships-left"> ships left: {remainingShipsRightside.length}</span></caption>
                                 <thead>
@@ -410,14 +449,7 @@ const GameRoom = () => {
                             </table>
                         </div>
                     </div>
-                    {turnMessage &&
-                        <>
-                            {myTurn
-                                ? <h1 className='text-center'>Your turn</h1>
-                                : <h1 className='text-center'>Opponent's turn</h1>
-                            }
-                        </>
-                    }
+            
                 </div>
             )}
 
@@ -428,6 +460,7 @@ const GameRoom = () => {
                     <Button as={Link} to="/">Play Again</Button>
                 </div>
             )}
+            </Container>
         </>
     )
 }

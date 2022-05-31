@@ -58,7 +58,7 @@ const Login = () => {
 
 	return (
 		<>
-			<div className="d-flex justify-content-end py-3">
+			<div className="d-flex justify-content-end p-3">
 				<Button className="rounded-circle" variant="secondary" onClick={handleShow}>
 					?
 				</Button>
@@ -78,7 +78,7 @@ const Login = () => {
 			<div id="login">
 				{!waitingScreen && (
 					<>
-						<h1>Battleship</h1>
+						<h1 id="game-title" className="p-4">Battleship</h1>
 						<Form className="text-center" onSubmit={handleSubmit}>
 							<Form.Group className="mb-3" controlId="username">
 								<Form.Control
