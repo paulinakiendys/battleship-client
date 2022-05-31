@@ -178,7 +178,7 @@ const GameRoom = () => {
         // console.log("Received a new message", message)
 
         // add message to chat
-        setMessages(prevMessages => [message, ...prevMessages])
+        setMessages(prevMessages => [...prevMessages, message])
     }
 
     const handleSubmit = e => {
