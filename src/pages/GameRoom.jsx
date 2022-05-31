@@ -1,7 +1,5 @@
 import { useNavigate, useParams, Link } from 'react-router-dom'
 import { useGameContext } from '../contexts/GameContextProvider'
-import GameBoard from '../components/GameBoard'
-import EnemyBoard from '../components/EnemyBoard'
 import { useEffect, useState, useCallback, useRef } from 'react'
 import { Button, Form, InputGroup, ListGroup, Toast, ToastContainer, Container } from 'react-bootstrap'
 import { generateUserShips } from '../assets/js/randomize_flotilla'
@@ -75,15 +73,19 @@ const GameRoom = () => {
             } else {
                 cell.style.backgroundColor = 'rgb(106, 124, 145)'
             }
-        }
-    }
+        },
+        [gameUsername],
+    )
 
-    const handleStartingPlayer = (randomUser) => {
-        setShowTurnMessage(true)
-        if (randomUser.username === gameUsername) {
-            setMyTurn(true)
-        }
-    }
+    const handleStartingPlayer = useCallback(
+        (randomUser) => {
+            setShowTurnMessage(true)
+            if (randomUser.username === gameUsername) {
+                setMyTurn(true)
+            }
+        },
+        [gameUsername],
+    )
 
     const checkClick = (e) => {
 
@@ -105,33 +107,32 @@ const GameRoom = () => {
 
     }
 
-    const handleNewTurn = (message, user) => {
-        // console.log("Received a new message", message)
+    const handleNewTurn = useCallback(
+        (message, user) => {
+            // add message to chat
+            setMessages(prevMessages => [...prevMessages, message])
 
-        // add message to chat
-        setMessages(prevMessages => [...prevMessages, message])
-
-        // chatLog.scrollTop = chatLog.scrollHeight;
-
-        if (user.username === gameUsername) {
-            setMyTurn(false)
-        } else {
-            setMyTurn(true)
-        }
-
-        // console.log("My turn is: ", myTurn)
-    }
+            if (user.username === gameUsername) {
+                setMyTurn(false)
+            } else {
+                setMyTurn(true)
+            }
+        }, [gameUsername]
+    )
 
     // Update ship status
-    const handleShipStatus = (playerOneRemainingShips, playerOneID, playerTwoRemainingShips, playerTwoID) => {
-        if (clientID === playerOneID) {
-            setRemainingShipsLeftside(playerOneRemainingShips)
-            setRemainingShipsRightside(playerTwoRemainingShips)
-        } else if (clientID === playerTwoID) {
-            setRemainingShipsLeftside(playerTwoRemainingShips)
-            setRemainingShipsRightside(playerOneRemainingShips)
-        }
-    }
+    const handleShipStatus = useCallback(
+        (playerOneRemainingShips, playerOneID, playerTwoRemainingShips, playerTwoID) => {
+            if (clientID === playerOneID) {
+                setRemainingShipsLeftside(playerOneRemainingShips)
+                setRemainingShipsRightside(playerTwoRemainingShips)
+            } else if (clientID === playerTwoID) {
+                setRemainingShipsLeftside(playerTwoRemainingShips)
+                setRemainingShipsRightside(playerOneRemainingShips)
+            }
+        },
+        [clientID],
+    )
 
     const handleReadyClick = () => {
 
@@ -185,7 +186,7 @@ const GameRoom = () => {
         // console.log("Received a new message", message)
 
         // add message to chat
-        setMessages(prevMessages => [message, ...prevMessages])
+        setMessages(prevMessages => [...prevMessages, message])
     }
 
     const handleSubmit = e => {
@@ -209,11 +210,11 @@ const GameRoom = () => {
 
     const handleWinner = (winner) => {
         setWinner(winner)
-        // console.log("winner is ", winner)
-        /**
-         * @todo setWinnerScreen to true
-         * 
-         */
+        console.log("winner is ", winner)
+
+        if (winner) {
+            setWinnerScreen(true)
+        }
     }
 
     // connect to room when component is mounted
@@ -266,7 +267,7 @@ const GameRoom = () => {
             socket.off('fire:incoming', handleIncomingFire)
         }
 
-    }, [socket, gameUsername, navigate, handleIncomingUsernames])
+    }, [socket, gameUsername, navigate, handleIncomingUsernames, handleIncomingFire, handleNewTurn, handleShipStatus, handleStartingPlayer])
 
     return (
         <>
