@@ -1,7 +1,5 @@
 import { useNavigate, useParams, Link } from 'react-router-dom'
 import { useGameContext } from '../contexts/GameContextProvider'
-import GameBoard from '../components/GameBoard'
-import EnemyBoard from '../components/EnemyBoard'
 import { useEffect, useState, useCallback, useRef } from 'react'
 import { Button, Form, InputGroup, ListGroup, Toast, ToastContainer } from 'react-bootstrap'
 import { generateUserShips } from '../assets/js/randomize_flotilla'
@@ -38,42 +36,48 @@ const GameRoom = () => {
      * @param {string} username username of client emitting event
      * @param {string} square id of cell that was clicked on
      */
-    const handleIncomingFire = (hit, username, square) => {
+    const handleIncomingFire = useCallback(
+        (hit, username, square) => {
 
-        // check who emitted event
-        if (gameUsername === username) {
-            // if 'user', get opponent's table
-            const opponentTable = opponentTableRef.current
-            // get cell that was clicked on
-            const cell = opponentTable.querySelector(`#${square}`)
+            // check who emitted event
+            if (gameUsername === username) {
+                // if 'user', get opponent's table
+                const opponentTable = opponentTableRef.current
+                // get cell that was clicked on
+                const cell = opponentTable.querySelector(`#${square}`)
 
-            // check if it was a 'hit' or a 'miss'
-            if (hit) {
-                cell.innerText = 'hit'
-            } else {
-                cell.innerText = 'miss'
+                // check if it was a 'hit' or a 'miss'
+                if (hit) {
+                    cell.innerText = 'hit'
+                } else {
+                    cell.innerText = 'miss'
+                }
+            } else if (gameUsername !== username) {
+                // if 'opponent', get user's table
+                const userTable = userTableRef.current
+                // get cell that was clicked on
+                const cell = userTable.querySelector(`#${square}`)
+
+                // check if it was a 'hit' or a 'miss'
+                if (hit) {
+                    cell.innerText = 'HIT'
+                } else {
+                    cell.innerText = 'MISS'
+                }
             }
-        } else if (gameUsername !== username) {
-            // if 'opponent', get user's table
-            const userTable = userTableRef.current
-            // get cell that was clicked on
-            const cell = userTable.querySelector(`#${square}`)
+        },
+        [gameUsername],
+    )
 
-            // check if it was a 'hit' or a 'miss'
-            if (hit) {
-                cell.innerText = 'HIT'
-            } else {
-                cell.innerText = 'MISS'
+    const handleStartingPlayer = useCallback(
+        (randomUser) => {
+            setShowTurnMessage(true)
+            if (randomUser.username === gameUsername) {
+                setMyTurn(true)
             }
-        }
-    }
-
-    const handleStartingPlayer = (randomUser) => {
-        setShowTurnMessage(true)
-        if (randomUser.username === gameUsername) {
-            setMyTurn(true)
-        }
-    }
+        },
+        [gameUsername],
+    )
 
     const checkClick = (e) => {
 
@@ -95,31 +99,32 @@ const GameRoom = () => {
 
     }
 
-    const handleNewTurn = (message, user) => {
-        // console.log("Received a new message", message)
+    const handleNewTurn = useCallback(
+        (message, user) => {
+            // add message to chat
+            setMessages(prevMessages => [...prevMessages, message])
 
-        // add message to chat
-        setMessages(prevMessages => [...prevMessages, message])
-
-        if (user.username === gameUsername) {
-            setMyTurn(false)
-        } else {
-            setMyTurn(true)
-        }
-
-        // console.log("My turn is: ", myTurn)
-    }
+            if (user.username === gameUsername) {
+                setMyTurn(false)
+            } else {
+                setMyTurn(true)
+            }
+        }, [gameUsername]
+    )
 
     // Update ship status
-    const handleShipStatus = (playerOneRemainingShips, playerOneID, playerTwoRemainingShips, playerTwoID) => {
-        if (clientID === playerOneID) {
-            setRemainingShipsLeftside(playerOneRemainingShips)
-            setRemainingShipsRightside(playerTwoRemainingShips)
-        } else if (clientID === playerTwoID) {
-            setRemainingShipsLeftside(playerTwoRemainingShips)
-            setRemainingShipsRightside(playerOneRemainingShips)
-        }
-    }
+    const handleShipStatus = useCallback(
+        (playerOneRemainingShips, playerOneID, playerTwoRemainingShips, playerTwoID) => {
+            if (clientID === playerOneID) {
+                setRemainingShipsLeftside(playerOneRemainingShips)
+                setRemainingShipsRightside(playerTwoRemainingShips)
+            } else if (clientID === playerTwoID) {
+                setRemainingShipsLeftside(playerTwoRemainingShips)
+                setRemainingShipsRightside(playerOneRemainingShips)
+            }
+        },
+        [clientID],
+    )
 
     const handleReadyClick = () => {
 
@@ -199,7 +204,7 @@ const GameRoom = () => {
         setWinner(winner)
         console.log("winner is ", winner)
 
-        if(winner) {
+        if (winner) {
             setWinnerScreen(true)
         }
     }
@@ -254,7 +259,7 @@ const GameRoom = () => {
             socket.off('fire:incoming', handleIncomingFire)
         }
 
-    }, [socket, gameUsername, navigate, handleIncomingUsernames])
+    }, [socket, gameUsername, navigate, handleIncomingUsernames, handleIncomingFire, handleNewTurn, handleShipStatus, handleStartingPlayer])
 
     return (
         <>
