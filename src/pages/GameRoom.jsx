@@ -3,6 +3,7 @@ import { useGameContext } from '../contexts/GameContextProvider'
 import { useEffect, useState, useCallback, useRef } from 'react'
 import { Button, Form, InputGroup, ListGroup, Toast, ToastContainer, Container } from 'react-bootstrap'
 import { generateUserShips } from '../assets/js/randomize_flotilla'
+import { useThemeContext } from '../contexts/ThemeContextProvider'
 
 const GameRoom = () => {
     const [message, setMessage] = useState('')
@@ -15,9 +16,7 @@ const GameRoom = () => {
     const [myTurn, setMyTurn] = useState(false)
     const [turnMessage, setShowTurnMessage] = useState(false)
     const [showToast, setShowToast] = useState(false);
-    const [showDisabledToast, setShowDisabledToast] = useState(false)
     const toggleShowToast = () => setShowToast(!showToast);
-    const toggleShowDisabledToast = () => setShowDisabledToast(!showDisabledToast);
     const [remainingShipsLeftside, setRemainingShipsLeftside] = useState([1, 2, 3, 4]);
     const [remainingShipsRightside, setRemainingShipsRightside] = useState([1, 2, 3, 4]);
     const [winner, setWinner] = useState(null);
@@ -27,6 +26,8 @@ const GameRoom = () => {
     const opponentTableRef = useRef()
     // const chatLogRef = useRef()
     // const chatLog = chatLogRef.current
+
+    const { isSpaceTheme, theme, toggleTheme } = useThemeContext()
 
     const board = {
         "rows": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
@@ -50,9 +51,15 @@ const GameRoom = () => {
                 // get cell that was clicked on
                 const cell = opponentTable.querySelector(`#${square}`)
 
+                //disable clicked cell
+                cell.classList.add('disabled')
+
                 // check if it was a 'hit' or a 'miss'
                 if (hit) {
-                    cell.innerText = '💥'
+                    {theme === 'light' ? 
+                    cell.innerText = '💣' : 
+                    cell.innerText = '🛸'}
+                
                     cell.style.backgroundColor = 'rgb(56, 5, 17)'
                 } else {
                     cell.style.backgroundColor = 'rgb(16, 49, 56)'
@@ -65,7 +72,10 @@ const GameRoom = () => {
 
                 // check if it was a 'hit' or a 'miss'
                 if (hit) {
-                    cell.innerText = '💥'
+                    {theme === 'light' ? 
+                    cell.innerText = '💣' : 
+                    cell.innerText = '💥'}
+                    cell.style.backgroundColor = 'rgb(56, 5, 17)'
                 } else {
                     cell.style.backgroundColor = 'rgb(19, 47, 54)'
                 }
@@ -273,18 +283,10 @@ const GameRoom = () => {
                     <Toast.Header>
                         <strong className="me-auto">Captain!</strong>
                     </Toast.Header>
-                    <Toast.Body>Stay calm, it's not your turn yet 🛳</Toast.Body>
+                    <Toast.Body>Stay calm, it's not your turn yet! </Toast.Body>
                 </Toast>
             </ToastContainer>
 
-            <ToastContainer position="top-end">
-                <Toast show={showDisabledToast} onClose={toggleShowDisabledToast} delay={2000} autohide>
-                    <Toast.Header>
-                        <strong className="me-auto">Captain!</strong>
-                    </Toast.Header>
-                    <Toast.Body>You have already tried this spot 🛳</Toast.Body>
-                </Toast>
-            </ToastContainer>
 
             <Container fluid>
             {!winnerScreen && (
@@ -296,9 +298,11 @@ const GameRoom = () => {
                                 title={gameUsername}
                                 shipsleft={remainingShipsLeftside.length}
                             /> */}
-                            <h1>🛳 Captain </h1>
+                            {theme === 'light' ? <h1>🏴‍☠️ Captain </h1> : <h1>🧑🏼‍🚀 Astronaut</h1>}
                             <table ref={userTableRef} id="userTable" className="user">
-                                <caption className="table-title">{gameUsername} <span className="ships-left"> ships left: {remainingShipsLeftside.length}</span></caption>
+                                <caption className="table-title">{gameUsername} 
+                                <br/> 
+                                <span className="ships-left"> {theme === 'light' ? 'Ships left: ' : 'Space ships left: '} {remainingShipsLeftside.length}</span></caption>
                                 <thead>
                                     <tr>
                                         <th scope="col">#</th>
@@ -336,7 +340,9 @@ const GameRoom = () => {
                         {/* @todo: make ChatLog a component */}
                         <div id="chat-wrapper">
                             <div id="chat-log">
-                                <div id="chat-title" className="text-center p-2 position-sticky">⚓️ ACTIVITY LOG ⚓️</div>
+                                <div id="chat-title" className="text-center p-2 position-sticky">
+                                    {theme === 'light' ? '🏴‍☠️ ACTIVITY LOG 🏴‍☠️' : '🚀 SPACE LOG 🚀'}
+                                    </div>
                                 {/* Here is log/chat */}
                                 <ListGroup id="messages">
                                     {messages.map((message, index) => {
@@ -376,8 +382,8 @@ const GameRoom = () => {
                                     <Button
                                         variant='success'
                                         onClick={handleReadyClick}
-                                    >
-                                        Generate ships
+                                    > Generate 
+                                        {theme === 'light' ? ' pirate ships' : ' space ships'}
                                     </Button>
                                 </div>
                             )}
@@ -385,13 +391,13 @@ const GameRoom = () => {
                             {turnMessage &&
                                 <>
                                     {myTurn
-                                        ? <div className='text-center p-4 text-white'>
-                                                <h4>Bombs away! 💣</h4>
-                                                <p>It's your turn.</p>
+                                        ? <div className='text-center p-4'>
+                                                <h4>Bombs away!</h4>
+                                                <p>It's your turn to shoot.</p>
                                             </div>
-                                        : <div className='text-center p-4 text-white'>
-                                                <h4>Hold your ground! 😨</h4>
-                                                <p>It's your enemy's turn.</p>
+                                        : <div className='text-center p-4'>
+                                                <h4>Hold your ground! </h4>
+                                                <p>It's your opponent's turn.</p>
                                             </div>
                                     }
                                 </>
@@ -402,15 +408,12 @@ const GameRoom = () => {
 
                     <div className="col-md-5 d-flex align-items-center justify-content-center">
                         <div id="opponent-gameboard">
-                            {/* <EnemyBoard
-                                owner="opponent"
-                                title={opponent}
-                                check={checkClick}
-                                shipsleft={remainingShipsRightside.length}
-                            /> */}
-                            <h1>🏴‍☠️ Enemy </h1>
+                            {theme === 'light' ? <h1>⛵️ Enemy </h1> : <h1>👽 Alien </h1>}
                             <table ref={opponentTableRef} id="enemyTable">
-                                <caption className="table-title">{opponent} <span className="ships-left"> ships left: {remainingShipsRightside.length}</span></caption>
+                                <caption className="table-title">{opponent} 
+                                <br/> 
+                                <span className="ships-left"> 
+                                {theme === 'light' ? 'Ships left: ' : 'Space ships left: '}  {remainingShipsRightside.length}</span></caption>
                                 <thead>
                                     <tr>
                                         <th scope="col">#</th>
@@ -448,9 +451,9 @@ const GameRoom = () => {
             )}
 
             {winnerScreen && (
-                <div className="vh-100 d-flex justify-content-center flex-column align-items-center">
+                <div className="vh-100 w-100 d-flex justify-content-center flex-column align-items-center">
                     {/* @todo Add styling to winner screen */}
-                    <h1>The winner is {winner}</h1>
+                    <h1 className="p-4">The winner is {winner}</h1>
                     <Button as={Link} to="/">Play Again</Button>
                 </div>
             )}

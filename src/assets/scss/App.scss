@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Bungee&family=Quicksand:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bungee&family=Quicksand:wght@400;600&family=Quintessential&display=swap');
 
 @import '~bootstrap/scss/bootstrap';
 @import './Table.scss';
@@ -8,9 +8,12 @@
     font-family: 'Quicksand';
 }
 
-h1, h2, h3, h4 {
+h3, h4 {
     font-family: 'Bungee', cursive;
-    color: white;
+}
+
+h1, h2 {
+    font-family: 'Quintessential';
 }
 
 html,
@@ -20,8 +23,8 @@ body,
     height: 100vh;
 }
 
-body {
-    background-color: rgb(22, 27, 36);
+#App {
+  background-image: url(../images/treasure-map.jpeg);
 }
 
 
@@ -68,6 +71,24 @@ body {
     justify-content: space-evenly;
 }
 
+#theme-btn {
+    width: 40px;
+    height: 40px;
+}
+
 .user {
     font-weight: bold;
+}
+
+#App.space {
+    background-image: url(../images/space-bg1.png);
+
+    table caption {
+        color: rgba(255, 255, 255, 0.9);
+        font-family: 'Bungee', cursive;
+      }
+
+    h1 {
+        font-family: 'Bungee', cursive;
+    }
 }

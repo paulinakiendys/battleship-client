@@ -6,22 +6,22 @@ table {
   
   table caption {
     font-size: 1.5em;
-    color: #fff;
     caption-side: top;
+    color: black;
+    width: 100%;
+    font-family: 'Quintessential';
   }
   
   td {
     width: 2rem;
     height: 2rem;
-    color: rgb(255, 255, 255);
     margin: 5px;
-    border: 0.5px solid rgb(255, 255, 255);
+    border: 0.5px solid rgb(255, 255, 255) !important;
     font-size: 1.5em;
   }
 
 
   th {
-    color: rgb(228, 255, 255);
     padding: 10px;
   }
   
@@ -40,7 +40,6 @@ table {
     background-color: #3b6e7e;
     &:hover{
       background-color: #344e57;
-      color: white;
     }
   }
   
@@ -50,7 +49,6 @@ table {
 
   .ships-left {
     font-size: 0.8em;
-    color: #ededed;
   }
 
   @media screen and(min-width: 768px) {

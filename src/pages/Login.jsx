@@ -2,7 +2,10 @@ import { useState } from 'react'
 import { Form, Button, Image, Modal } from 'react-bootstrap'
 import { useGameContext } from '../contexts/GameContextProvider'
 import { useNavigate } from "react-router-dom"
-import WaitingBoat from "../assets/images/boat-wave.gif"
+import SpaceDog from "../assets/images/space-dog.gif"
+import PirateCat from "../assets/images/pirate-cat.gif"
+import { useThemeContext } from '../contexts/ThemeContextProvider'
+import  Navigation from '../components/Navigation'
 
 const Login = () => {
 	const [username, setUsername] = useState('')
@@ -11,10 +14,8 @@ const Login = () => {
 	const navigate = useNavigate()
 	const [waitingScreen, setWaitingScreen] = useState(false)
 
-	//variables for modal
-	const [show, setShow] = useState(false);
-	const handleClose = () => setShow(false);
-	const handleShow = () => setShow(true);
+	//Toggle theme
+	const { isSpaceTheme, theme, toggleTheme } = useThemeContext()
 
 	const handleSubmit = async function (e) {
 		e.preventDefault()
@@ -57,24 +58,10 @@ const Login = () => {
 	}
 
 	return (
+	
 		<>
-			<div className="d-flex justify-content-end p-3">
-				<Button className="rounded-circle" variant="secondary" onClick={handleShow}>
-					?
-				</Button>
+		<Navigation />
 
-				<Modal show={show} onHide={handleClose}>
-					<Modal.Header closeButton>
-						<Modal.Title>How to play?</Modal.Title>
-					</Modal.Header>
-					<Modal.Body>The rules are simple. Seek out your opponent's ships and destroy them. Click on a square to fire. Sink all your opponent's ships to win!</Modal.Body>
-					<Modal.Footer>
-						<Button variant="secondary" onClick={handleClose}>
-							Close
-						</Button>
-					</Modal.Footer>
-				</Modal>
-			</div>
 			<div id="login">
 				{!waitingScreen && (
 					<>
@@ -97,17 +84,30 @@ const Login = () => {
 								disabled={!username}>
 								Join
 							</Button>
+
+
 						</Form>
 					</>
 				)}
 
 				{waitingScreen && (
 					<div className="d-flex justify-content-center flex-column align-items-center">
-						<Image src={WaitingBoat} fluid />
-						<h1>Waiting for an opponent...</h1>
+						{theme === 'light' ? 
+						<>
+							<Image className="p-4" src={PirateCat} fluid />
+							<h1>Waiting for a boat to plunder...</h1>
+						</> 
+						: 
+						<>
+							<Image className="p-4" src={SpaceDog} fluid />
+							<h1>Waiting for an alien...</h1>
+						</>
+						}
+						
 					</div>
 				)}
 			</div>
+		  
 		</>
 	)
 }
