@@ -24,29 +24,41 @@ Client side of [battleship game](https://fed21-battleship.netlify.app/) built us
 
 ## Screenshots
 
-### Login view
+### Space theme
 
-#### Space theme
+#### Login view
 
-![Login-Space](./screenshots/Screenshot%202022-04-29%20at%2020-40-02%20Star-wars-encyclopedia.png)
+![Login-Space](./screenshots/login-space.png)
 
-#### Pirate theme
+#### Waiting screen
 
-![Login-Pirate](./screenshots/Screenshot%202022-04-29%20at%2020-41-25%20Star-wars-encyclopedia.png)
+![Waiting-Space](./screenshots/waiting-space.png)
 
-### Game view
+#### Game view
 
-#### Space theme
+![Game-Space](./screenshots/game-space.png)
 
-![Game-Space](./screenshots/Screenshot%202022-04-29%20at%2020-41-25%20Star-wars-encyclopedia.png)
+#### Winner screen
 
-#### Pirate theme
+![Winner-Space](./screenshots/winner-space.png)
 
-![Game-Pirate](./screenshots/Screenshot%202022-04-29%20at%2020-41-25%20Star-wars-encyclopedia.png)
+### Pirate theme
 
-### Winner view
+#### Login view
 
-![Winner](./screenshots/Screenshot%202022-04-29%20at%2020-41-25%20Star-wars-encyclopedia.png)
+![Login-Pirate](./screenshots/login-pirate.png)
+
+#### Waiting screen
+
+![Waiting-Pirate](./screenshots/waiting-pirate.png)
+
+#### Game view
+
+![Game-Pirate](./screenshots/game-pirate.png)
+
+#### Winner screen
+
+![Winner-Pirate](./screenshots/winner-pirate.png)
 
 ## Timeline
 
