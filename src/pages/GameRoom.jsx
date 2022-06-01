@@ -284,12 +284,14 @@ const GameRoom = () => {
 
     return (
         <>
-            <ToastContainer position="top-end">
-                <Toast show={showToast} onClose={toggleShowToast} delay={2000} autohide>
+            <ToastContainer className="p-4" position="top-end">
+                <Toast className="text-black" show={showToast} onClose={toggleShowToast} delay={3000} autohide>
                     <Toast.Header>
-                        <strong className="me-auto">Captain!</strong>
+                        <strong className="me-auto">
+                        {theme === 'light' ? 'Captain! 🏴‍☠️' : 'Astronaut! 🚀'}
+                        </strong>
                     </Toast.Header>
-                    <Toast.Body>Stay calm, it's not your turn yet! </Toast.Body>
+                    <Toast.Body className="p-4"><strong>Stay calm, it's not your turn yet! </strong> </Toast.Body>
                 </Toast>
             </ToastContainer>
 
