@@ -4,8 +4,6 @@ const board = {
     "cols": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]
 }
 
-//TODO - Blir inte helt randomized, vi får kolla på hur vi kan optimera den. Alla skeppen hamnar i en diagonal i mitten hehe
-
 const shuffle = (array) => {
     array.sort(() => Math.random() - 0.5);
 }
@@ -78,7 +76,6 @@ export const generateUserShips = () => {
     userShips.forEach(ship => {generateRandomLocation(ship)
     })
 
-    // Förbätra om har tid
     // ShipId 1
     if(userShips[0].row >= 5) {
       // console.log("Going minus")

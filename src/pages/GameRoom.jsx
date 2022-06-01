@@ -144,6 +144,12 @@ const GameRoom = () => {
     const handleReadyClick = () => {
 
         let userShips = generateUserShips()
+        /* let userShips = []
+        userShips.push(ShipsFactory(4))
+        userShips.push(ShipsFactory(3))
+        userShips.push(ShipsFactory(2))
+        userShips.push(ShipsFactory(2))
+        console.log("userShips", userShips) */
 
         const table = userTableRef.current
         if (table.classList.contains("user")) {

@@ -35,8 +35,7 @@ table {
   }
   
   td.opponent {
-    //cursor: url('../images/cursor-aim.png');
-    cursor: pointer;
+    cursor: url("../images/crosshair.png") 55 55, auto;
     background-color: #3b6e7e;
     &:hover{
       background-color: #344e57;
