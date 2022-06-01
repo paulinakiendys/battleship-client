@@ -2,93 +2,93 @@
 
 @import '~bootstrap/scss/bootstrap';
 @import './Table.scss';
-@import './Activity.scss';
 
 * {
-    font-family: 'Quicksand';
+	font-family: 'Quicksand';
 }
 
-h3, h4 {
-    font-family: 'Bungee', cursive;
+h3,
+h4 {
+	font-family: 'Bungee', cursive;
 }
 
-h1, h2 {
-    font-family: 'Quintessential';
+h1,
+h2 {
+	font-family: 'Quintessential';
 }
 
 html,
 body,
 #root,
 #App {
-    height: 100vh;
+	height: 100vh;
 }
 
 #App {
-  background-image: url(../images/treasure-map.jpeg);
+	background-image: url(../images/treasure-map.jpeg);
 }
 
-
 .container-fluid {
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+	height: 100vh;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
 }
 
 #game-title {
-    font-size: 5em;
+	font-size: 5em;
 }
 
 #login {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: calc(100vh - 200px);
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	height: calc(100vh - 200px);
 }
 
 #chat-title {
-    color: white;
-    background-color: rgb(23, 32, 53);
+	color: white;
+	background-color: rgb(23, 32, 53);
 }
 
 #chat-wrapper {
-    width: 250px;
-    height: 400px;
-    margin-top: 55px;
+	width: 250px;
+	height: 400px;
+	margin-top: 55px;
 }
 
 #chat-log {
-    border: 1px solid grey;
-    height: 300px;
-    width: 250px;
-    overflow-y: scroll;
-    background-color:#fff;
+	border: 1px solid grey;
+	height: 300px;
+	width: 250px;
+	overflow-y: scroll;
+	background-color: #fff;
 }
 
 #buttons-wrapper {
-    display: flex;
-    justify-content: space-evenly;
+	display: flex;
+	justify-content: space-evenly;
 }
 
 #theme-btn {
-    width: 40px;
-    height: 40px;
+	width: 40px;
+	height: 40px;
 }
 
 .user {
-    font-weight: bold;
+	font-weight: bold;
 }
 
 #App.space {
-    background-image: url(../images/space-bg1.png);
+	background-image: url(../images/space-bg1.png);
 
-    table caption {
-        color: rgba(255, 255, 255, 0.9);
-        font-family: 'Bungee', cursive;
-      }
+	table caption {
+		color: rgba(255, 255, 255, 0.9);
+		font-family: 'Bungee', cursive;
+	}
 
-    h1 {
-        font-family: 'Bungee', cursive;
-    }
+	h1 {
+		font-family: 'Bungee', cursive;
+	}
 }

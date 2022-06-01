@@ -1,58 +1,54 @@
 table {
-    border-spacing: 2;
-    padding: 20px;
-    text-align: center;
-  }
-  
-  table caption {
-    font-size: 1.5em;
-    caption-side: top;
-    color: black;
-    width: 100%;
-    font-family: 'Quintessential';
-  }
-  
-  td {
-    width: 2rem;
-    height: 2rem;
-    margin: 5px;
-    border: 0.5px solid rgb(255, 255, 255) !important;
-    font-size: 1.5em;
-  }
+	border-spacing: 2;
+	padding: 20px;
+	text-align: center;
+}
+
+table caption {
+	font-size: 1.5em;
+	caption-side: top;
+	color: black;
+	width: 100%;
+	font-family: 'Quintessential';
+}
+
+td {
+	width: 2rem;
+	height: 2rem;
+	margin: 5px;
+	border: 0.5px solid rgb(255, 255, 255) !important;
+	font-size: 1.5em;
+}
 
 
-  th {
-    padding: 10px;
-  }
-  
-  td.user {
-    //background-color: #a1d0df;
-    background-color: rgb(152, 183, 186);
-    // &:hover{
-    //   background-color: #032530;
-    //   color: white;
-    // } 
-  }
-  
-  td.opponent {
-    cursor: url("../images/crosshair.png") 55 55, auto;
-    background-color: #3b6e7e;
-    &:hover{
-      background-color: #344e57;
-    }
-  }
-  
-  .disabled {
-    pointer-events: none;
-  }
+th {
+	padding: 10px;
+}
 
-  .ships-left {
-    font-size: 0.8em;
-  }
+td.user {
+	background-color: rgb(152, 183, 186);
+}
 
-  @media screen and(min-width: 768px) {
-    td {
-      width: 3rem;
-      height: 3rem;
-    }
-  }
+td.opponent {
+	cursor: url("../images/crosshair.png") 55 55, auto;
+	background-color: #3b6e7e;
+
+	&:hover {
+		background-color: #344e57;
+	}
+}
+
+.disabled {
+	pointer-events: none;
+}
+
+.ships-left {
+	font-size: 0.8em;
+}
+
+@media screen and(min-width: 768px) {
+	td {
+		width: 3rem;
+		height: 3rem;
+	}
+}

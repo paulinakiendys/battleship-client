@@ -15,7 +15,7 @@ const ThemeContextProvider = ({ children }) => {
 		return classNames({
 			'bg-dark': isSpaceTheme(),
 			'text-light': isSpaceTheme(),
-      'space' : isSpaceTheme()
+			'space': isSpaceTheme()
 		})
 	}
 

@@ -17,7 +17,7 @@ const Navigation = () => {
 						<Button id="theme-btn" onClick={toggleTheme} variant="light">
 							{isSpaceTheme() ? '🏴‍☠️' : '🚀'}
 						</Button>
-                        <RulesModal />
+						<RulesModal />
 					</Nav>
 				</Navbar.Collapse>
 			</Container>
